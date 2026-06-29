@@ -749,6 +749,16 @@
     background: rgba(0, 0, 0, 0.95);
     text-shadow: 0 0 4px rgba(0, 255, 204, 0.4);
     scroll-behavior: smooth;
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+}
+
+.hud-console-body *::selection {
+    background: #00ffcc !important;
+    color: #000000 !important;
+    text-shadow: none !important;
 }
 
 @media (min-width: 1025px) {
