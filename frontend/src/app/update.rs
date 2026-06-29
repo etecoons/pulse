@@ -42,7 +42,7 @@ impl App {
                     wasm_bindgen_futures::spawn_local(async move {
                         if let Ok(resp) = Request::get("/api/auth-check").send().await {
                             if resp.status() == 200 {
-                                link.send_message(Msg::PinResponse(true, None));
+                                link.send_message(Msg::PinResponse(true, None, None, None));
                             }
                         }
                     });
@@ -50,7 +50,8 @@ impl App {
                 true
             }
             Msg::PinInputChanged(val) => {
-                self.pin_input = val;
+                let filtered: String = val.chars().filter(|c| c.is_ascii_digit()).collect();
+                self.pin_input = filtered;
                 if self.pin_input.len() == self.pin_length {
                     ctx.link().send_message(Msg::SubmitPin);
                 }
@@ -63,24 +64,40 @@ impl App {
                     let payload = VerifyPinPayload { pin: Some(pin) };
                     if let Ok(resp) = Request::post("/api/verify-pin").json(&payload).unwrap().send().await {
                         if resp.status() == 200 {
-                            link.send_message(Msg::PinResponse(true, None));
+                            link.send_message(Msg::PinResponse(true, None, None, None));
                         } else if let Ok(json) = resp.json::<Value>().await {
                             let err = json["error"].as_str().unwrap_or("Verification failed").to_string();
-                            link.send_message(Msg::PinResponse(false, Some(err)));
+                            let attempts = json["attemptsLeft"].as_u64().map(|v| v as usize);
+                            let lockout = json["lockoutMinutes"].as_u64().or_else(|| {
+                                // If the message indicates a lockout, try to extract minutes
+                                if err.contains("Please try again in") {
+                                    err.split("Please try again in ")
+                                       .nth(1)
+                                       .and_then(|s| s.split(' ').next())
+                                       .and_then(|s| s.parse::<u64>().ok())
+                                } else {
+                                    None
+                                }
+                            });
+                            link.send_message(Msg::PinResponse(false, Some(err), attempts, lockout));
                         }
                     }
                 });
                 true
             }
-            Msg::PinResponse(success, error) => {
+            Msg::PinResponse(success, error, attempts_left, lockout_minutes) => {
                 self.is_authenticated = success;
                 self.pin_input.clear();
                 if success {
                     self.error_message = None;
+                    self.attempts_left = None;
+                    self.lockout_minutes = None;
                     self.connect_ws(ctx);
                     self.terminal_logs.push("[AUTH] Security clearance granted.".to_string());
                 } else {
                     self.error_message = error;
+                    self.attempts_left = attempts_left;
+                    self.lockout_minutes = lockout_minutes;
                 }
                 true
             }
@@ -88,7 +105,7 @@ impl App {
                 let link = ctx.link().clone();
                 wasm_bindgen_futures::spawn_local(async move {
                     let _ = Request::post("/api/logout").send().await;
-                    link.send_message(Msg::PinResponse(false, None));
+                    link.send_message(Msg::PinResponse(false, None, None, None));
                 });
                 if let Some(ws) = self.ws.take() {
                     let _ = ws.close();
