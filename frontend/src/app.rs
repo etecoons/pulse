@@ -28,6 +28,7 @@ pub enum Msg {
     CheckFallback,
     IncreaseFontSize,
     DecreaseFontSize,
+    TogglePauseConsole,
 }
 
 pub struct App {
@@ -58,6 +59,7 @@ pub struct App {
     pub monitor_storage: bool,
     pub monitor_network: bool,
     pub monitor_gpu: bool,
+    pub console_paused: bool,
 }
 
 impl Component for App {
@@ -115,6 +117,7 @@ impl Component for App {
             monitor_storage: true,
             monitor_network: true,
             monitor_gpu: true,
+            console_paused: false,
         }
     }
 
@@ -133,8 +136,10 @@ impl Component for App {
             });
         }
 
-        if let Some(el) = self.console_ref.cast::<web_sys::HtmlElement>() {
-            el.set_scroll_top(el.scroll_height());
+        if !self.console_paused {
+            if let Some(el) = self.console_ref.cast::<web_sys::HtmlElement>() {
+                el.set_scroll_top(el.scroll_height());
+            }
         }
     }
 

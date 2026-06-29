@@ -213,6 +213,10 @@ impl App {
                 self.console_font_size = (self.console_font_size - 0.05).max(0.65);
                 true
             }
+            Msg::TogglePauseConsole => {
+                self.console_paused = !self.console_paused;
+                true
+            }
             Msg::CheckFallback => {
                 let ws_connected = self.ws.as_ref().map(|w| w.ready_state() == 1).unwrap_or(false);
                 if !ws_connected && self.is_authenticated {

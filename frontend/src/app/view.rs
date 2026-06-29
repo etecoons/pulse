@@ -20,6 +20,17 @@ impl App {
                         <div class="hud-console-controls">
                             <button onclick={ctx.link().callback(|_| Msg::DecreaseFontSize)} title="Decrease Font Size" class="font-btn">{"A-"}</button>
                             <button onclick={ctx.link().callback(|_| Msg::IncreaseFontSize)} title="Increase Font Size" class="font-btn">{"A+"}</button>
+                            {
+                                if self.console_paused {
+                                    html! {
+                                        <button onclick={ctx.link().callback(|_| Msg::TogglePauseConsole)} title="Resume Auto-Scroll" class="font-btn active-paused">{"▶ PLAY"}</button>
+                                    }
+                                } else {
+                                    html! {
+                                        <button onclick={ctx.link().callback(|_| Msg::TogglePauseConsole)} title="Pause Auto-Scroll" class="font-btn">{"⏸ PAUSE"}</button>
+                                    }
+                                }
+                            }
                             <button onclick={ctx.link().callback(|_| Msg::ClearTerminal)}>{"CLEAR"}</button>
                         </div>
                     </div>
