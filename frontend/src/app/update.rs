@@ -203,18 +203,31 @@ impl App {
             Msg::ClearTerminal => {
                 self.terminal_logs.clear();
                 self.terminal_logs.push("[SYSTEM] Terminal buffer cleared.".to_string());
+                self.notify(ctx, "Console logs cleared".to_string());
                 true
             }
             Msg::IncreaseFontSize => {
                 self.console_font_size = (self.console_font_size + 0.05).min(1.5);
+                self.notify(ctx, format!("Font size increased to {:.2}rem", self.console_font_size));
                 true
             }
             Msg::DecreaseFontSize => {
                 self.console_font_size = (self.console_font_size - 0.05).max(0.65);
+                self.notify(ctx, format!("Font size decreased to {:.2}rem", self.console_font_size));
                 true
             }
             Msg::TogglePauseConsole => {
                 self.console_paused = !self.console_paused;
+                let text = if self.console_paused { "Console scrolling paused" } else { "Console scrolling resumed" };
+                self.notify(ctx, text.to_string());
+                true
+            }
+            Msg::ClearNotification(msg_to_clear) => {
+                if let Some((current_msg, _)) = &self.active_notification {
+                    if current_msg == &msg_to_clear {
+                        self.active_notification = None;
+                    }
+                }
                 true
             }
             Msg::CheckFallback => {
@@ -232,5 +245,13 @@ impl App {
                 false
             }
         }
+    }
+
+    fn notify(&mut self, ctx: &Context<Self>, msg: String) {
+        self.active_notification = Some((msg.clone(), "info".to_string()));
+        let link = ctx.link().clone();
+        Timeout::new(3000, move || {
+            link.send_message(Msg::ClearNotification(msg));
+        }).forget();
     }
 }

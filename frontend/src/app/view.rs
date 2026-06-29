@@ -23,11 +23,11 @@ impl App {
                             {
                                 if self.console_paused {
                                     html! {
-                                        <button onclick={ctx.link().callback(|_| Msg::TogglePauseConsole)} title="Resume Auto-Scroll" class="font-btn active-paused">{"▶ PLAY"}</button>
+                                        <button onclick={ctx.link().callback(|_| Msg::TogglePauseConsole)} title="Resume Auto-Scroll" class="font-btn pause-btn active-paused">{"PLAY"}</button>
                                     }
                                 } else {
                                     html! {
-                                        <button onclick={ctx.link().callback(|_| Msg::TogglePauseConsole)} title="Pause Auto-Scroll" class="font-btn">{"⏸ PAUSE"}</button>
+                                        <button onclick={ctx.link().callback(|_| Msg::TogglePauseConsole)} title="Pause Auto-Scroll" class="font-btn pause-btn">{"PAUSE"}</button>
                                     }
                                 }
                             }

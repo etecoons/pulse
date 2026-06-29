@@ -29,6 +29,7 @@ pub enum Msg {
     IncreaseFontSize,
     DecreaseFontSize,
     TogglePauseConsole,
+    ClearNotification(String),
 }
 
 pub struct App {
