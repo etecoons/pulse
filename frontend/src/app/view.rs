@@ -15,7 +15,6 @@ impl App {
                 <div class="hud-console-wrapper">
                     <div class="hud-console-header">
                         <span class="hostname-glow">
-                            <span class="live-pulse">{"● "}</span>
                             {console_title}
                         </span>
                         <div class="hud-console-controls">
