@@ -206,7 +206,7 @@ impl App {
         }
 
         let width = 140.0;
-        let height = 24.0;
+        let height = 16.0;
         let points_count = history.len();
         
         let effective_max = if max_val > 0.0 { max_val } else {
@@ -216,13 +216,13 @@ impl App {
         let points = history.iter().enumerate().map(|(idx, &val)| {
             let x = if points_count > 1 { (idx as f32 / (points_count - 1) as f32) * width } else { 0.0 };
             let percent = (val / effective_max).min(1.0).max(0.0);
-            let y = height - (percent * (height - 4.0)) - 2.0;
+            let y = height - (percent * (height - 3.0)) - 1.5;
             format!("{:.1},{:.1}", x, y)
         }).collect::<Vec<String>>().join(" ");
 
         html! {
-            <div style="width: 100%; height: 24px; margin-top: 0.5rem; opacity: 0.85;">
-                <svg width="100%" height="24" viewBox={format!("0 0 {} {}", width, height)} preserveAspectRatio="none" style="display: block; overflow: visible;">
+            <div style="width: 100%; height: 16px; margin-top: 0.3rem; opacity: 0.85;">
+                <svg width="100%" height="16" viewBox={format!("0 0 {} {}", width, height)} preserveAspectRatio="none" style="display: block; overflow: visible;">
                     <polyline
                         fill="none"
                         stroke="var(--primary)"
