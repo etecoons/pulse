@@ -4,60 +4,40 @@ use yew::prelude::*;
 
 impl App {
     pub fn view_login(&self, ctx: &Context<Self>) -> Html {
+        let pin_len = self.pin_length;
         let error_html = self.error_message.as_ref().map(|err| {
-            html! { <div class="login-error-banner">{err}</div> }
+            html! { <p id="pin-error" class="pin-error" style="display: block;">{err}</p> }
         });
-
-        let pin_display = (0..self.pin_length)
-            .map(|i| {
-                let dot_class = if i < self.pin_input.len() {
-                    "login-dot active"
-                } else {
-                    "login-dot"
-                };
-                html! { <div class={dot_class}></div> }
-            })
-            .collect::<Html>();
-
-        let keypad_buttons = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
-            .iter()
-            .map(|&digit| {
-                let d = digit.to_string();
-                let on_click = ctx.link().callback(move |_| Msg::PinInput(d.clone()));
-                html! {
-                    <button class="login-keypad-btn" onclick={on_click}>{digit}</button>
-                }
-            })
-            .collect::<Html>();
-
-        let on_backspace = ctx.link().callback(|_| Msg::PinBackspace);
 
         html! {
             <div class="login-container">
-                <div class="login-card">
-                    <div class="login-header">
-                        <div class="login-icon-frame">
-                            <img src="/favicon.svg" class="login-app-icon" alt="Pulse" />
+                <div class="login-box">
+                    <div class="login-header" style="margin-bottom: 2rem;">
+                        <div class="login-icon-frame" style="display: flex; justify-content: center; margin-bottom: 1rem;">
+                            <img src="/favicon.svg" class="login-app-icon" alt="Pulse" style="width: 64px; height: 64px;" />
                         </div>
-                        <h2>{ &self.site_title }</h2>
-                        <p>{"Enter security PIN to access metrics dashboard"}</p>
+                        <h2 style="font-size: 1.5rem; font-weight: 500; color: var(--text); opacity: 0.8; line-height: 1.2;">
+                            {"ENTER SECURITY PIN"}
+                        </h2>
                     </div>
-
-                    {error_html}
-
-                    <div class="login-pin-display">
-                        {pin_display}
-                    </div>
-
-                    <div class="login-keypad-grid">
-                        {keypad_buttons}
-                        <button class="login-keypad-btn fn-btn" disabled=true></button>
-                        <button class="login-keypad-btn" onclick={ctx.link().callback(|_| Msg::PinInput("0".to_string()))}>{"0"}</button>
-                        <button class="login-keypad-btn fn-btn" onclick={on_backspace}>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM18 9l-6 6M12 9l6 6" />
-                            </svg>
-                        </button>
+                    <form id="pin-form" onsubmit={ctx.link().callback(|e: SubmitEvent| { e.prevent_default(); Msg::SubmitPin })}>
+                        <div class="pin-wrapper">
+                            <input
+                                type="password"
+                                class="pin-input-field"
+                                value={self.pin_input.clone()}
+                                oninput={ctx.link().callback(|e: InputEvent| {
+                                    let input: web_sys::HtmlInputElement = e.target_unchecked_into();
+                                    Msg::PinInputChanged(input.value())
+                                })}
+                                placeholder={"• ".repeat(pin_len).trim().to_string()}
+                                maxlength={pin_len.to_string()}
+                                autofocus=true
+                            />
+                        </div>
+                    </form>
+                    <div class="pin-status">
+                        {error_html}
                     </div>
                 </div>
             </div>

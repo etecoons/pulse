@@ -13,8 +13,7 @@ mod ws;
 
 pub enum Msg {
     LoadConfig(Value),
-    PinInput(String),
-    PinBackspace,
+    PinInputChanged(String),
     SubmitPin,
     PinResponse(bool, Option<String>),
     Logout,

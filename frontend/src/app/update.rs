@@ -44,17 +44,11 @@ impl App {
                 }
                 true
             }
-            Msg::PinInput(digit) => {
-                if self.pin_input.len() < self.pin_length {
-                    self.pin_input.push_str(&digit);
-                }
+            Msg::PinInputChanged(val) => {
+                self.pin_input = val;
                 if self.pin_input.len() == self.pin_length {
                     ctx.link().send_message(Msg::SubmitPin);
                 }
-                true
-            }
-            Msg::PinBackspace => {
-                self.pin_input.pop();
                 true
             }
             Msg::SubmitPin => {
