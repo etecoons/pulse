@@ -34,7 +34,7 @@ impl App {
                             <button onclick={ctx.link().callback(|_| Msg::ClearTerminal)}>{"CLEAR"}</button>
                         </div>
                     </div>
-                    <div class="hud-console-body" ref={self.console_ref.clone()} style={format!("font-size: {}rem;", self.console_font_size)}>
+                    <div class="hud-console-body" ref={self.console_ref.clone()} onmouseup={ctx.link().callback(|_| Msg::ConsoleMouseUp)} style={format!("font-size: {}rem;", self.console_font_size)}>
                         {for self.terminal_logs.iter().map(|log| {
                             let log_cls = if log.contains("ERROR") || log.contains("Error") || log.contains("Failed") || log.contains("failed") || log.contains("CRITICAL") {
                                 "console-line error"

@@ -756,7 +756,7 @@
 }
 
 .hud-console-body *::selection {
-    background: #00ffcc !important;
+    background: var(--primary) !important;
     color: #000000 !important;
     text-shadow: none !important;
 }

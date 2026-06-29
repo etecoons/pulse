@@ -230,6 +230,12 @@ impl App {
                 }
                 true
             }
+            Msg::ConsoleMouseUp => {
+                if let Some(_) = shared_frontend::utils::copy_selection_to_clipboard() {
+                    self.notify(ctx, "Copied selection to clipboard".to_string());
+                }
+                true
+            }
             Msg::CheckFallback => {
                 let ws_connected = self.ws.as_ref().map(|w| w.ready_state() == 1).unwrap_or(false);
                 if !ws_connected && self.is_authenticated {

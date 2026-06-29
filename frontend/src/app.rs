@@ -30,6 +30,7 @@ pub enum Msg {
     DecreaseFontSize,
     TogglePauseConsole,
     ClearNotification(String),
+    ConsoleMouseUp,
 }
 
 pub struct App {

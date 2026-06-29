@@ -28,15 +28,15 @@
         # 1. Build the WASM frontend
         frontend = rustPlatform.buildRustPackage {
           pname = "pulse-frontend";
-          version = "1.1.9";
+          version = "1.2.0";
           src = ./.;
 
           cargoLock = {
             lockFile = ./Cargo.lock;
             outputHashes = {
-              "shared-core-3.0.0" = "sha256-ozJJ4XDZOA3BbTBrHhN3gi/2xRIuVnAq940QyNltMl8=";
-              "shared-backend-3.0.0" = "sha256-ozJJ4XDZOA3BbTBrHhN3gi/2xRIuVnAq940QyNltMl8=";
-              "shared-frontend-3.0.0" = "sha256-ozJJ4XDZOA3BbTBrHhN3gi/2xRIuVnAq940QyNltMl8=";
+              "shared-core-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
+              "shared-backend-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
+              "shared-frontend-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
             };
           };
 
@@ -63,15 +63,15 @@
         # 2. Build the Axum backend
         backend = rustPlatform.buildRustPackage {
           pname = "pulse-backend";
-          version = "1.1.9";
+          version = "1.2.0";
           src = ./.;
 
           cargoLock = {
             lockFile = ./Cargo.lock;
             outputHashes = {
-              "shared-core-3.0.0" = "sha256-ozJJ4XDZOA3BbTBrHhN3gi/2xRIuVnAq940QyNltMl8=";
-              "shared-backend-3.0.0" = "sha256-ozJJ4XDZOA3BbTBrHhN3gi/2xRIuVnAq940QyNltMl8=";
-              "shared-frontend-3.0.0" = "sha256-ozJJ4XDZOA3BbTBrHhN3gi/2xRIuVnAq940QyNltMl8=";
+              "shared-core-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
+              "shared-backend-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
+              "shared-frontend-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
             };
           };
 
