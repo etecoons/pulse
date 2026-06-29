@@ -81,7 +81,7 @@ impl App {
                 <div class="hud-visor-grid">
                     // CPU Card
                     <div class="hud-metric-card">
-                        <h3>{"CPU USAGE"}</h3>
+                        <h3>{"PROCESSOR LOAD"}</h3>
                         {if let Some(stats) = &self.stats {
                             html! {
                                 <div class="card-metric-block">
@@ -99,7 +99,7 @@ impl App {
 
                     // RAM Card
                     <div class="hud-metric-card">
-                        <h3>{"MEMORY"}</h3>
+                        <h3>{"SYSTEM MEMORY"}</h3>
                         {if let Some(stats) = &self.stats {
                             let ram_used_gb = stats.ram_used as f32 / 1024.0 / 1024.0 / 1024.0;
                             let ram_total_gb = stats.ram_total as f32 / 1024.0 / 1024.0 / 1024.0;
@@ -111,21 +111,6 @@ impl App {
                                     <div class="hud-bar-frame">
                                         <div class="hud-bar-fill" style={format!("width: {}%;", ram_percent)}></div>
                                     </div>
-                                </div>
-                            }
-                        } else {
-                            html! { <div class="card-loading">{"Loading..."}</div> }
-                        }}
-                    </div>
-
-                    // Network Card
-                    <div class="hud-metric-card">
-                        <h3>{"NETWORK I/O"}</h3>
-                        {if let Some(stats) = &self.stats {
-                            html! {
-                                <div class="card-metric-block">
-                                    <div class="card-main-val download-glow">{format!("↓ {}", self.format_bytes(stats.net_in))}</div>
-                                    <div class="card-subtext upload-glow">{format!("↑ {}", self.format_bytes(stats.net_out))}</div>
                                 </div>
                             }
                         } else {
@@ -154,9 +139,24 @@ impl App {
                         }}
                     </div>
 
+                    // Network Card
+                    <div class="hud-metric-card">
+                        <h3>{"NETWORK TRAFFIC"}</h3>
+                        {if let Some(stats) = &self.stats {
+                            html! {
+                                <div class="card-metric-block">
+                                    <div class="card-main-val download-glow">{format!("↓ {}", self.format_bytes(stats.net_in))}</div>
+                                    <div class="card-subtext upload-glow">{format!("↑ {}", self.format_bytes(stats.net_out))}</div>
+                                </div>
+                            }
+                        } else {
+                            html! { <div class="card-loading">{"Loading..."}</div> }
+                        }}
+                    </div>
+
                     // GPU Card
                     <div class="hud-metric-card">
-                        <h3>{"GPU USAGE"}</h3>
+                        <h3>{"GPU ACCELERATION"}</h3>
                         {if let Some(stats) = &self.stats {
                             if let Some(gpu) = &stats.gpu {
                                 html! {
