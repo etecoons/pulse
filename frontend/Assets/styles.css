@@ -550,13 +550,19 @@
 }
 
 .hud-visor-container {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
     gap: 1.5rem;
     padding: 0 1rem 1rem 1rem;
     max-width: 100%;
     width: 100%;
     box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+    .hud-visor-container {
+        grid-template-columns: 1fr;
+    }
 }
 
 .hud-loading-frame {
@@ -584,21 +590,9 @@
 
 .hud-visor-grid {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 1.5rem;
     width: 100%;
-}
-
-@media (max-width: 1024px) {
-    .hud-visor-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 640px) {
-    .hud-visor-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 .hud-metric-card {
@@ -751,10 +745,16 @@
     gap: 0.4rem;
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.9rem;
-    color: #00ffcc; /* Sci-fi cyber-cyan */
+    color: #00ffcc;
     background: rgba(0, 0, 0, 0.95);
     text-shadow: 0 0 4px rgba(0, 255, 204, 0.4);
     scroll-behavior: smooth;
+}
+
+@media (min-width: 1025px) {
+    .hud-console-body {
+        height: 520px;
+    }
 }
 
 .console-line {
