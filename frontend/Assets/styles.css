@@ -827,3 +827,31 @@
 .console-line.info {
     color: var(--text-secondary);
 }
+
+.header-center-uptime {
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    transform: translate(-50%, -50%);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--primary);
+    text-shadow: 0 0 8px var(--primary-glow);
+    z-index: 1000;
+    pointer-events: none;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.header-center-uptime .uptime-label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .header-center-uptime {
+        display: none;
+    }
+}

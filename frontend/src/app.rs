@@ -152,6 +152,33 @@ impl Component for App {
                     on_print={None::<Callback<MouseEvent>>}
                 />
 
+                {if self.is_authenticated {
+                    let uptime_str = if let Some(stats) = &self.stats {
+                        let seconds = stats.uptime;
+                        let days = seconds / 86400;
+                        let hours = (seconds % 86400) / 3600;
+                        let minutes = (seconds % 3600) / 60;
+                        let secs = seconds % 60;
+                        if days > 0 {
+                            format!("{}d {}h {}m", days, hours, minutes)
+                        } else if hours > 0 {
+                            format!("{}h {}m {}s", hours, minutes, secs)
+                        } else {
+                            format!("{}m {}s", minutes, secs)
+                        }
+                    } else {
+                        "--".to_string()
+                    };
+                    html! {
+                        <div class="header-center-uptime">
+                            <span class="uptime-label">{"UPTIME: "}</span>
+                            <span class="uptime-val">{uptime_str}</span>
+                        </div>
+                    }
+                } else {
+                    html! {}
+                }}
+
                 <div class="app-body">
                     {if !self.is_authenticated && self.pin_required {
                         self.view_login(ctx)

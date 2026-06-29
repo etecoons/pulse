@@ -4,23 +4,6 @@ use yew::prelude::*;
 
 impl App {
     pub fn view_hud(&self, ctx: &Context<Self>) -> Html {
-        let uptime_str = if let Some(stats) = &self.stats {
-            let seconds = stats.uptime;
-            let days = seconds / 86400;
-            let hours = (seconds % 86400) / 3600;
-            let minutes = (seconds % 3600) / 60;
-            let secs = seconds % 60;
-            if days > 0 {
-                format!("{}d {}h {}m", days, hours, minutes)
-            } else if hours > 0 {
-                format!("{}h {}m {}s", hours, minutes, secs)
-            } else {
-                format!("{}m {}s", minutes, secs)
-            }
-        } else {
-            "--".to_string()
-        };
-
         let console_title = if let Some(stats) = &self.stats {
             stats.hostname.to_uppercase()
         } else {
@@ -38,7 +21,6 @@ impl App {
                         <div class="hud-console-controls">
                             <button onclick={ctx.link().callback(|_| Msg::DecreaseFontSize)} title="Decrease Font Size" class="font-btn">{"A-"}</button>
                             <button onclick={ctx.link().callback(|_| Msg::IncreaseFontSize)} title="Increase Font Size" class="font-btn">{"A+"}</button>
-                            <span class="uptime-label">{format!("Uptime: {}", uptime_str)}</span>
                             <button onclick={ctx.link().callback(|_| Msg::ClearTerminal)}>{"CLEAR"}</button>
                         </div>
                     </div>
