@@ -1,4 +1,4 @@
-# Pulse
+# <img src="frontend/Assets/favicon.svg" width="48" height="48" align="center" alt="Pulse Icon"> Pulse
 
 A minimalist, high-performance, self-hosted system monitor container. Pulse runs a lightweight background thread on the host (or container) that queries CPU, RAM, Network I/O, and GPU usage metrics, streaming them to a sci-fi heads-up display (HUD) and an interactive diagnostic terminal in real-time.
 
