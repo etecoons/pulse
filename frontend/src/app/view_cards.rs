@@ -10,7 +10,9 @@ impl App {
                     html! {
                         <div class="card-metric-block">
                             <div class="card-main-val">{format!("{:.1}%", stats.cpu_global)}</div>
-                            <div class="card-subtext">{format!("{} Cores", stats.cpu_cores.len())}</div>
+                            <div class="card-subtext" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title={stats.cpu_brand.clone()}>
+                                {format!("{} Cores | {}", stats.cpu_cores.len(), stats.cpu_brand)}
+                            </div>
                             <div class="hud-bar-frame"><div class="hud-bar-fill" style={format!("width: {}%;", stats.cpu_global)}></div></div>
                             { self.render_sparkline(&self.cpu_history, 100.0) }
                         </div>
@@ -126,11 +128,13 @@ impl App {
                         let temp_str = gpu.temp.map(|t| format!("{:.0}°C", t)).unwrap_or_else(|| "--".to_string());
                         let name_str = if gpu.name.is_empty() { format!("GPU {}", idx + 1) } else { gpu.name.clone() };
                         html! {
-                            <div class="hud-metric-card" title={name_str}>
+                            <div class="hud-metric-card" title={name_str.clone()}>
                                 <h3>{format!("GPU {}", idx + 1)}</h3>
                                 <div class="card-metric-block">
                                     <div class="card-main-val">{format!("{:.1}%", gpu.usage)}</div>
-                                    <div class="card-subtext">{format!("Core Temp: {}", temp_str)}</div>
+                                    <div class="card-subtext" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title={name_str.clone()}>
+                                        {format!("Temp: {} | {}", temp_str, name_str)}
+                                    </div>
                                     <div class="hud-bar-frame"><div class="hud-bar-fill" style={format!("width: {}%;", gpu.usage)}></div></div>
                                     { self.render_sparkline(&self.gpu_histories[idx], 100.0) }
                                 </div>
