@@ -701,6 +701,41 @@
     text-shadow: 0 0 8px var(--primary-glow);
 }
 
+.sys-info-right pre.os-nixos {
+    color: #5277C3 !important;
+    text-shadow: 0 0 8px rgba(82, 119, 195, 0.75) !important;
+}
+
+.sys-info-right pre.os-ubuntu {
+    color: #E95420 !important;
+    text-shadow: 0 0 8px rgba(233, 84, 32, 0.75) !important;
+}
+
+.sys-info-right pre.os-debian {
+    color: #D70A53 !important;
+    text-shadow: 0 0 8px rgba(215, 10, 83, 0.75) !important;
+}
+
+.sys-info-right pre.os-arch {
+    color: #1793D1 !important;
+    text-shadow: 0 0 8px rgba(23, 147, 209, 0.75) !important;
+}
+
+.sys-info-right pre.os-fedora {
+    color: #3C6EB4 !important;
+    text-shadow: 0 0 8px rgba(60, 110, 180, 0.75) !important;
+}
+
+.sys-info-right pre.os-pop {
+    color: #48B4E0 !important;
+    text-shadow: 0 0 8px rgba(72, 180, 224, 0.75) !important;
+}
+
+.sys-info-right pre.os-generic {
+    color: var(--primary) !important;
+    text-shadow: 0 0 8px var(--primary-glow) !important;
+}
+
 @media (max-width: 600px) {
     .sys-info-card {
         grid-column: span 1;

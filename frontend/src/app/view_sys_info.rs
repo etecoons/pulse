@@ -19,6 +19,23 @@ impl App {
                 }
             };
 
+            let os_lower = stats.os_name.to_lowercase();
+            let os_class = if os_lower.contains("nixos") {
+                "os-nixos"
+            } else if os_lower.contains("ubuntu") {
+                "os-ubuntu"
+            } else if os_lower.contains("debian") {
+                "os-debian"
+            } else if os_lower.contains("arch") {
+                "os-arch"
+            } else if os_lower.contains("pop") {
+                "os-pop"
+            } else if os_lower.contains("fedora") {
+                "os-fedora"
+            } else {
+                "os-generic"
+            };
+
             let os_ascii = self.get_os_ascii(&stats.os_name);
 
             html! {
@@ -45,7 +62,7 @@ impl App {
                         </div>
                     </div>
                     <div class="sys-info-right ascii-container">
-                        <pre>{ os_ascii }</pre>
+                        <pre class={os_class}>{ os_ascii }</pre>
                     </div>
                 </div>
             }
@@ -75,6 +92,8 @@ impl App {
             "      /\\\n     /  \\\n    /\\   \\\n   /  __  \\\n  /  (  )  \\\n /  ▞    ▜  \\\n/____________\\"
         } else if os.contains("fedora") {
             "      ▗▄▄▄▄▖\n     ▞▀  ▗▞▘\n    ▐▌  ▗▛▘\n   ▗▜▀▀▀▛▚▖\n   ▐▌  ▐▌ ▐▌\n    ▝▚▄▞▘▞▘"
+        } else if os.contains("pop") {
+            "     ▗▄███▄▖\n    ▐██▛▀▀▜██▌\n    ▐██▌ ▗ ▐██▌\n     ▜██▙▟██▛\n      ▝████▘\n       ▐██▌\n       ▝▀▀▘"
         } else {
             "     ▗▄███▄▖\n    ▗█▀ ▜ ▀█▖\n    ▐▌ ▗▟▙▖ ▐▌\n   ▗█▌ ▐██▌ ▐█▖\n   ▐██▄▄██▄▄██▌\n    ▝▀█████▀▘"
         }
