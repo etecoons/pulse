@@ -23,5 +23,8 @@ pub struct SystemStats {
     pub gpus: Vec<GpuStats>,
     pub uptime: u64,
     pub hostname: String,
+    pub os_name: String,
+    pub os_version: String,
+    pub kernel_version: String,
     pub sys_logs: Vec<String>,
 }

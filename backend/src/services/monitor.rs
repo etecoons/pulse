@@ -20,6 +20,9 @@ pub struct SystemStats {
     pub gpus: Vec<GpuStats>,
     pub uptime: u64,
     pub hostname: String,
+    pub os_name: String,
+    pub os_version: String,
+    pub kernel_version: String,
     pub sys_logs: Vec<String>,
 }
 
@@ -108,6 +111,11 @@ impl SystemMonitor {
             // Fetch Hostname
             let hostname = System::host_name().unwrap_or_else(|| "localhost".to_string());
 
+            // Fetch OS/Kernel metadata
+            let os_name = System::name().unwrap_or_else(|| "Linux".to_string());
+            let os_version = System::os_version().unwrap_or_default();
+            let kernel_version = System::kernel_version().unwrap_or_default();
+
             // Fetch host system logs
             let sys_logs = get_system_logs();
 
@@ -124,6 +132,9 @@ impl SystemMonitor {
                 gpus,
                 uptime,
                 hostname,
+                os_name,
+                os_version,
+                kernel_version,
                 sys_logs,
             };
 
