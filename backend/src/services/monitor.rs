@@ -30,6 +30,11 @@ pub struct SystemMonitor {
     networks: Networks,
     last_net_check: Instant,
     state: Arc<RwLock<Option<SystemStats>>>,
+    cpu_brand: String,
+    hostname: String,
+    os_name: String,
+    os_version: String,
+    kernel_version: String,
 }
 
 impl SystemMonitor {
@@ -38,11 +43,26 @@ impl SystemMonitor {
         sys.refresh_all();
 
         let networks = Networks::new_with_refreshed_list();
+        let cpu_brand = sys
+            .cpus()
+            .first()
+            .map(|c| c.brand().trim().to_string())
+            .unwrap_or_else(|| "Unknown CPU".to_string());
+        let hostname = System::host_name().unwrap_or_else(|| "localhost".to_string());
+        let os_name = System::name().unwrap_or_else(|| "Linux".to_string());
+        let os_version = System::os_version().unwrap_or_default();
+        let kernel_version = System::kernel_version().unwrap_or_default();
+
         Self {
             sys,
             networks,
             last_net_check: Instant::now(),
             state: shared_stats,
+            cpu_brand,
+            hostname,
+            os_name,
+            os_version,
+            kernel_version,
         }
     }
 
@@ -93,27 +113,18 @@ impl SystemMonitor {
             let disk_total = total_space;
             let disk_used = total_space - total_available;
 
-            // Fetch CPU brand
-            let cpu_brand = self
-                .sys
-                .cpus()
-                .first()
-                .map(|c| c.brand().trim().to_string())
-                .unwrap_or_else(|| "Unknown CPU".to_string());
+            // Use cached static properties
+            let cpu_brand = self.cpu_brand.clone();
+            let hostname = self.hostname.clone();
+            let os_name = self.os_name.clone();
+            let os_version = self.os_version.clone();
+            let kernel_version = self.kernel_version.clone();
 
             // Fetch GPU stats
             let gpus = gpu::get_gpu_stats();
 
             // System Uptime (associated function in sysinfo)
             let uptime = System::uptime();
-
-            // Fetch Hostname
-            let hostname = System::host_name().unwrap_or_else(|| "localhost".to_string());
-
-            // Fetch OS/Kernel metadata
-            let os_name = System::name().unwrap_or_else(|| "Linux".to_string());
-            let os_version = System::os_version().unwrap_or_default();
-            let kernel_version = System::kernel_version().unwrap_or_default();
 
             let stats = SystemStats {
                 cpu_global,

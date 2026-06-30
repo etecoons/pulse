@@ -1,6 +1,9 @@
 use std::fs;
 use std::path::Path;
 use std::process::Command;
+use std::sync::OnceLock;
+
+static HAS_NVIDIA_SMI: OnceLock<bool> = OnceLock::new();
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct GpuStats {
@@ -23,11 +26,13 @@ pub fn get_gpu_stats() -> Vec<GpuStats> {
 }
 
 fn get_nvidia_stats() -> Option<Vec<GpuStats>> {
-    let has_nvidia_smi = Command::new("which")
-        .arg("nvidia-smi")
-        .status()
-        .map(|s| s.success())
-        .unwrap_or(false);
+    let has_nvidia_smi = *HAS_NVIDIA_SMI.get_or_init(|| {
+        Command::new("which")
+            .arg("nvidia-smi")
+            .status()
+            .map(|s| s.success())
+            .unwrap_or(false)
+    });
     if !has_nvidia_smi && !Path::new("/dev/nvidiactl").exists() {
         return None;
     }
