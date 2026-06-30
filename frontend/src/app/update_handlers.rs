@@ -35,15 +35,21 @@ impl App {
             self.cpu_history.remove(0);
         }
 
-        let ram_percent =
-            (stats.ram_used as f32 / stats.ram_total as f32 * 100.0).clamp(0.0, 100.0);
+        let ram_percent = if stats.ram_total > 0 {
+            (stats.ram_used as f32 / stats.ram_total as f32 * 100.0).clamp(0.0, 100.0)
+        } else {
+            0.0
+        };
         self.ram_history.push(ram_percent);
         if self.ram_history.len() > 15 {
             self.ram_history.remove(0);
         }
 
-        let disk_percent =
-            (stats.disk_used as f32 / stats.disk_total as f32 * 100.0).clamp(0.0, 100.0);
+        let disk_percent = if stats.disk_total > 0 {
+            (stats.disk_used as f32 / stats.disk_total as f32 * 100.0).clamp(0.0, 100.0)
+        } else {
+            0.0
+        };
         self.disk_history.push(disk_percent);
         if self.disk_history.len() > 15 {
             self.disk_history.remove(0);

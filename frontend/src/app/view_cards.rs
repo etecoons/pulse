@@ -34,7 +34,11 @@ impl App {
                 {if let Some(stats) = &self.stats {
                     let ram_used_gb = stats.ram_used as f32 / 1024.0 / 1024.0 / 1024.0;
                     let ram_total_gb = stats.ram_total as f32 / 1024.0 / 1024.0 / 1024.0;
-                    let ram_percent = (stats.ram_used as f32 / stats.ram_total as f32 * 100.0).clamp(0.0, 100.0);
+                    let ram_percent = if stats.ram_total > 0 {
+                        (stats.ram_used as f32 / stats.ram_total as f32 * 100.0).clamp(0.0, 100.0)
+                    } else {
+                        0.0
+                    };
                     html! {
                         <div class="card-metric-block">
                             <div class="card-main-val">{format!("{:.1} / {:.1} GB", ram_used_gb, ram_total_gb)}</div>
@@ -62,7 +66,11 @@ impl App {
                 {if let Some(stats) = &self.stats {
                     let disk_used_gb = stats.disk_used as f32 / 1024.0 / 1024.0 / 1024.0;
                     let disk_total_gb = stats.disk_total as f32 / 1024.0 / 1024.0 / 1024.0;
-                    let disk_percent = (stats.disk_used as f32 / stats.disk_total as f32 * 100.0).clamp(0.0, 100.0);
+                    let disk_percent = if stats.disk_total > 0 {
+                        (stats.disk_used as f32 / stats.disk_total as f32 * 100.0).clamp(0.0, 100.0)
+                    } else {
+                        0.0
+                    };
                     html! {
                         <div class="card-metric-block">
                             <div class="card-main-val">{format!("{:.1} / {:.1} GB", disk_used_gb, disk_total_gb)}</div>
