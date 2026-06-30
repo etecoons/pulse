@@ -731,6 +731,26 @@
     text-shadow: 0 0 8px rgba(72, 180, 224, 0.75) !important;
 }
 
+.sys-info-right pre.os-unraid {
+    color: #FF5C00 !important;
+    text-shadow: 0 0 8px rgba(255, 92, 0, 0.75) !important;
+}
+
+.sys-info-right pre.os-gentoo {
+    color: #CC99FF !important;
+    text-shadow: 0 0 8px rgba(204, 153, 255, 0.75) !important;
+}
+
+.sys-info-right pre.os-guix {
+    color: #FFC53D !important;
+    text-shadow: 0 0 8px rgba(255, 197, 61, 0.75) !important;
+}
+
+.sys-info-right pre.os-win11 {
+    color: #0078D4 !important;
+    text-shadow: 0 0 8px rgba(0, 120, 212, 0.75) !important;
+}
+
 .sys-info-right pre.os-generic {
     color: var(--primary) !important;
     text-shadow: 0 0 8px var(--primary-glow) !important;

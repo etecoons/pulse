@@ -27,7 +27,11 @@ impl App {
                 Some(3) => "arch".to_string(),
                 Some(4) => "fedora".to_string(),
                 Some(5) => "pop".to_string(),
-                Some(6) => "generic".to_string(),
+                Some(6) => "unraid".to_string(),
+                Some(7) => "gentoo".to_string(),
+                Some(8) => "guix".to_string(),
+                Some(9) => "win11".to_string(),
+                Some(10) => "generic".to_string(),
                 _ => "generic".to_string(),
             };
 
@@ -167,6 +171,53 @@ impl App {
                     {"     ▀█████████████▀\n"}
                     {"       ▀█████████▀\n"}
                     {"         ▀▀▀▀▀▀▀"}
+                </pre>
+            }
+        } else if os.contains("unraid") {
+            html! {
+                <pre class="os-unraid">
+                    {"      ▄▄▄▄▄▄▄▄▄▄▄\n"}
+                    {"      ███████████\n"}
+                    {"\n"}
+                    {"      ███████████\n"}
+                    {"\n"}
+                    {"      ███████████"}
+                </pre>
+            }
+        } else if os.contains("gentoo") {
+            html! {
+                <pre class="os-gentoo">
+                    {"         ▄▄████▄▄\n"}
+                    {"       ▄████▀▀▀███▄\n"}
+                    {"      ▐███▌     ▐██▌\n"}
+                    {"      ████      ▗██▛\n"}
+                    {"      ▐███▄    ▄███▘\n"}
+                    {"       ▀█████████▀\n"}
+                    {"         ▀▀████▀"}
+                </pre>
+            }
+        } else if os.contains("guix") {
+            html! {
+                <pre class="os-guix">
+                    {"         ▄██████▄\n"}
+                    {"       ▄████▀▀████▄\n"}
+                    {"      ████▀    ▀████\n"}
+                    {"      ████      ████\n"}
+                    {"      ████▄    ▄████\n"}
+                    {"       ▀██████████▀\n"}
+                    {"         ▀▀████▀▀"}
+                </pre>
+            }
+        } else if os.contains("win11") || os.contains("windows") {
+            html! {
+                <pre class="os-win11">
+                    {"      ██████  ██████\n"}
+                    {"      ██████  ██████\n"}
+                    {"      ██████  ██████\n"}
+                    {"\n"}
+                    {"      ██████  ██████\n"}
+                    {"      ██████  ██████\n"}
+                    {"      ██████  ██████"}
                 </pre>
             }
         } else {
