@@ -28,12 +28,6 @@ impl App {
                 self.monitor_storage = json["monitorStorage"].as_bool().unwrap_or(true);
                 self.monitor_network = json["monitorNetwork"].as_bool().unwrap_or(true);
                 self.monitor_gpu = json["monitorGpu"].as_bool().unwrap_or(true);
-                self.monitor_console = json["monitorConsole"].as_bool().unwrap_or(true);
-
-                self.terminal_logs.push(format!(
-                    "[SYSTEM] Config loaded. Site: {}, Pin Required: {}",
-                    self.site_title, self.pin_required
-                ));
 
                 if !self.pin_required {
                     self.is_authenticated = true;
@@ -114,8 +108,7 @@ impl App {
                 true
             }
             Msg::UpdateStats(stats) => self.handle_update_stats(stats),
-            Msg::WsError(err) => {
-                self.terminal_logs.push(format!("[WS ERROR] {}", err));
+            Msg::WsError(_err) => {
                 self.active_notification = Some(("Disconnected".to_string(), "error".to_string()));
                 self.ws = None;
                 let link = ctx.link().clone();
@@ -125,10 +118,7 @@ impl App {
                 .forget();
                 true
             }
-            Msg::WsLog(msg) => {
-                self.terminal_logs.push(msg);
-                true
-            }
+            Msg::WsLog(_msg) => true,
             Msg::Reconnect => {
                 if self.is_authenticated {
                     self.connect_ws(ctx);
@@ -162,50 +152,11 @@ impl App {
                 StorageService::set_item("language", lang.code());
                 true
             }
-            Msg::ClearTerminal => {
-                self.terminal_logs.clear();
-                self.terminal_logs
-                    .push("[SYSTEM] Terminal buffer cleared.".to_string());
-                self.notify(ctx, "Console logs cleared".to_string());
-                true
-            }
-            Msg::IncreaseFontSize => {
-                self.console_font_size = (self.console_font_size + 0.05).min(1.5);
-                self.notify(
-                    ctx,
-                    format!("Font size increased to {:.2}rem", self.console_font_size),
-                );
-                true
-            }
-            Msg::DecreaseFontSize => {
-                self.console_font_size = (self.console_font_size - 0.05).max(0.65);
-                self.notify(
-                    ctx,
-                    format!("Font size decreased to {:.2}rem", self.console_font_size),
-                );
-                true
-            }
-            Msg::TogglePauseConsole => {
-                self.console_paused = !self.console_paused;
-                let text = if self.console_paused {
-                    "Console scrolling paused"
-                } else {
-                    "Console scrolling resumed"
-                };
-                self.notify(ctx, text.to_string());
-                true
-            }
             Msg::ClearNotification(msg_to_clear) => {
                 if let Some((current_msg, _)) = &self.active_notification {
                     if current_msg == &msg_to_clear {
                         self.active_notification = None;
                     }
-                }
-                true
-            }
-            Msg::ConsoleMouseUp => {
-                if shared_frontend::utils::copy_selection_to_clipboard().is_some() {
-                    self.notify(ctx, "Copied selection to clipboard".to_string());
                 }
                 true
             }
@@ -275,8 +226,6 @@ impl App {
             self.attempts_left = None;
             self.lockout_minutes = None;
             self.connect_ws(ctx);
-            self.terminal_logs
-                .push("[AUTH] Security clearance granted.".to_string());
         } else {
             self.error_message = error;
             self.attempts_left = attempts_left;
@@ -286,8 +235,6 @@ impl App {
     }
 
     fn handle_update_stats(&mut self, stats: SystemStats) -> bool {
-        self.terminal_logs = stats.sys_logs.clone();
-
         self.cpu_history.push(stats.cpu_global);
         if self.cpu_history.len() > 15 {
             self.cpu_history.remove(0);

@@ -25,8 +25,6 @@ impl App {
             "[WS] Connecting to {}",
             ws_url
         )));
-        self.terminal_logs
-            .push(format!("[WS] Connecting to {}...", ws_url));
 
         let ws = WebSocket::new(&ws_url);
         let ws = match ws {

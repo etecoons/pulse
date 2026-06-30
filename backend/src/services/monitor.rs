@@ -23,7 +23,6 @@ pub struct SystemStats {
     pub os_name: String,
     pub os_version: String,
     pub kernel_version: String,
-    pub sys_logs: Vec<String>,
 }
 
 pub struct SystemMonitor {
@@ -116,9 +115,6 @@ impl SystemMonitor {
             let os_version = System::os_version().unwrap_or_default();
             let kernel_version = System::kernel_version().unwrap_or_default();
 
-            // Fetch host system logs
-            let sys_logs = get_system_logs();
-
             let stats = SystemStats {
                 cpu_global,
                 cpu_cores,
@@ -135,7 +131,6 @@ impl SystemMonitor {
                 os_name,
                 os_version,
                 kernel_version,
-                sys_logs,
             };
 
             // Update shared state
@@ -156,26 +151,4 @@ pub fn start_monitor(state: AppState) {
         let monitor = SystemMonitor::new(shared_stats);
         monitor.run_loop(interval).await;
     });
-}
-
-fn get_system_logs() -> Vec<String> {
-    if let Some(output) = std::process::Command::new("journalctl")
-        .args(["-n", "30", "--no-pager"])
-        .output()
-        .ok()
-        .filter(|o| o.status.success())
-    {
-        let text = String::from_utf8_lossy(&output.stdout);
-        return text.lines().map(|s| s.to_string()).collect();
-    }
-    if let Some(output) = std::process::Command::new("dmesg")
-        .args(["-n", "30"])
-        .output()
-        .ok()
-        .filter(|o| o.status.success())
-    {
-        let text = String::from_utf8_lossy(&output.stdout);
-        return text.lines().map(|s| s.to_string()).collect();
-    }
-    vec!["[SYSTEM] Active logger. Monitoring dashboard...".to_string()]
 }

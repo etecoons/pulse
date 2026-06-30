@@ -26,13 +26,8 @@ pub enum Msg {
     Reconnect,
     ToggleTheme,
     ChangeLanguage(Language),
-    ClearTerminal,
     CheckFallback,
-    IncreaseFontSize,
-    DecreaseFontSize,
-    TogglePauseConsole,
     ClearNotification(String),
-    ConsoleMouseUp,
     CycleOsOverride,
 }
 
@@ -49,7 +44,6 @@ pub struct App {
     pub lockout_minutes: Option<u64>,
     pub stats: Option<SystemStats>,
     pub ws: Option<WebSocket>,
-    pub terminal_logs: Vec<String>,
     pub enable_translation: bool,
     pub enable_themes: bool,
     pub enable_print: bool,
@@ -59,15 +53,11 @@ pub struct App {
     pub net_history: Vec<f32>,
     pub gpu_histories: Vec<Vec<f32>>,
     pub active_notification: Option<(String, String)>,
-    pub console_font_size: f32,
-    pub console_ref: NodeRef,
     pub monitor_cpu: bool,
     pub monitor_memory: bool,
     pub monitor_storage: bool,
     pub monitor_network: bool,
     pub monitor_gpu: bool,
-    pub monitor_console: bool,
-    pub console_paused: bool,
     pub os_override: Option<usize>,
 }
 
@@ -115,7 +105,6 @@ impl Component for App {
             lockout_minutes: None,
             stats: None,
             ws: None,
-            terminal_logs: vec!["[SYSTEM] Initializing metrics dashboard...".to_string()],
             enable_translation: false,
             enable_themes: true,
             enable_print: false,
@@ -125,15 +114,11 @@ impl Component for App {
             net_history: Vec::new(),
             gpu_histories: Vec::new(),
             active_notification: None,
-            console_font_size: 0.85,
-            console_ref: NodeRef::default(),
             monitor_cpu: true,
             monitor_memory: true,
             monitor_storage: true,
             monitor_network: true,
             monitor_gpu: true,
-            monitor_console: false,
-            console_paused: false,
             os_override: None,
         }
     }
@@ -168,12 +153,6 @@ impl Component for App {
                 .add_event_listener_with_callback("keydown", closure.as_ref().unchecked_ref())
                 .unwrap();
             closure.forget();
-        }
-
-        if !self.console_paused {
-            if let Some(el) = self.console_ref.cast::<web_sys::HtmlElement>() {
-                el.set_scroll_top(el.scroll_height());
-            }
         }
     }
 
