@@ -543,17 +543,11 @@
     padding: 1.5rem;
 }
 
-/* Samus Visor HUD Styles */
-.app-body {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-}
-
 .hud-visor-container {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
     gap: 1.5rem;
-    padding: 0 1rem 1rem 1rem;
+    padding: 0;
     max-width: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -566,7 +560,7 @@
     min-height: calc(100vh - 120px);
     width: 100%;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 0;
 }
 
 .hud-visor-container.no-console .hud-visor-grid {
