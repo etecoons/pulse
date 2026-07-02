@@ -18,9 +18,9 @@ impl App {
                         <h2>
                             {
                                 if is_locked {
-                                    "TOO MANY ATTEMPTS"
+                                    crate::i18n::lookup(crate::i18n::PulseKey::TooManyAttempts, self.language)
                                 } else {
-                                    "ENTER PIN"
+                                    crate::i18n::lookup(crate::i18n::PulseKey::EnterPin, self.language)
                                 }
                             }
                         </h2>
@@ -59,7 +59,7 @@ impl App {
                                 if attempts < 5 && !is_locked {
                                     html! {
                                         <p id="attemptsRemaining" class="attempts-remaining" style="display: block;">
-                                            { format!("{} attempts remaining", attempts) }
+                                            { crate::i18n::lookup(crate::i18n::PulseKey::AttemptsRemaining(attempts), self.language) }
                                         </p>
                                     }
                                 } else {

@@ -8,9 +8,9 @@ impl App {
             <div class="hud-metric-card" title={cpu_brand.clone()}>
                 <h3 style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 100%;" title={cpu_brand.clone()}>
                     {if self.stats.is_some() {
-                        format!("CPU: {}", cpu_brand)
+                        format!("{}: {}", crate::i18n::lookup(crate::i18n::PulseKey::Cpu, self.language), cpu_brand)
                     } else {
-                        "CPU".to_string()
+                        crate::i18n::lookup(crate::i18n::PulseKey::Cpu, self.language)
                     }}
                 </h3>
                 {if let Some(stats) = &self.stats {
@@ -37,7 +37,7 @@ impl App {
     pub fn view_memory_card(&self) -> Html {
         html! {
             <div class="hud-metric-card">
-                <h3>{"MEMORY"}</h3>
+                <h3>{crate::i18n::lookup(crate::i18n::PulseKey::Memory, self.language)}</h3>
                 {if let Some(stats) = &self.stats {
                     let ram_used_gb = stats.ram_used as f32 / 1024.0 / 1024.0 / 1024.0;
                     let ram_total_gb = stats.ram_total as f32 / 1024.0 / 1024.0 / 1024.0;
@@ -69,7 +69,7 @@ impl App {
     pub fn view_storage_card(&self) -> Html {
         html! {
             <div class="hud-metric-card">
-                <h3>{"STORAGE"}</h3>
+                <h3>{crate::i18n::lookup(crate::i18n::PulseKey::Storage, self.language)}</h3>
                 {if let Some(stats) = &self.stats {
                     let disk_used_gb = stats.disk_used as f32 / 1024.0 / 1024.0 / 1024.0;
                     let disk_total_gb = stats.disk_total as f32 / 1024.0 / 1024.0 / 1024.0;
@@ -101,7 +101,7 @@ impl App {
     pub fn view_network_card(&self) -> Html {
         html! {
             <div class="hud-metric-card">
-                <h3>{"NETWORK"}</h3>
+                <h3>{crate::i18n::lookup(crate::i18n::PulseKey::Network, self.language)}</h3>
                 {if let Some(stats) = &self.stats {
                     html! {
                         <div class="card-metric-block">
@@ -135,7 +135,7 @@ impl App {
                         html! {
                             <div class="hud-metric-card" title={name_str.clone()}>
                                 <h3 style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 100%;" title={name_str.clone()}>
-                                    {format!("GPU {}: {}", idx + 1, name_str)}
+                                    {format!("{} {}: {}", crate::i18n::lookup(crate::i18n::PulseKey::Gpu, self.language), idx + 1, name_str)}
                                 </h3>
                                 <div class="card-metric-block">
                                     <div class="card-main-val">{format!("{:.1}%", gpu.usage)}</div>
@@ -151,7 +151,7 @@ impl App {
             } else {
                 html! {
                     <div class="hud-metric-card">
-                        <h3>{"GPU"}</h3>
+                        <h3>{crate::i18n::lookup(crate::i18n::PulseKey::Gpu, self.language)}</h3>
                         <div class="card-metric-block">
                             <div class="card-loading">{"Connecting..."}</div>
                             { self.render_sparkline(&[], 100.0) }

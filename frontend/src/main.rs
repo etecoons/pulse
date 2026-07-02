@@ -3,6 +3,7 @@
 mod app;
 mod storage;
 mod types;
+mod i18n;
 
 fn main() {
     yew::Renderer::<app::App>::new().render();

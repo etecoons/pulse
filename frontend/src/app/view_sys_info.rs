@@ -44,14 +44,14 @@ impl App {
             html! {
                 <div class="hud-metric-card sys-info-card" title="System Information">
                     <div class="sys-info-left">
-                        <h3>{"SYSTEM INFO"}</h3>
+                        <h3>{crate::i18n::lookup(crate::i18n::PulseKey::SystemInfo, self.language)}</h3>
                         <div class="card-metric-block sys-details">
                             <div class="sys-detail-row">
-                                <span class="sys-detail-label">{"HOST:"}</span>
+                                <span class="sys-detail-label">{format!("{}:", crate::i18n::lookup(crate::i18n::PulseKey::Hostname, self.language).to_uppercase())}</span>
                                 <span class="sys-detail-val hostname-glow">{ &stats.hostname }</span>
                             </div>
                             <div class="sys-detail-row">
-                                <span class="sys-detail-label">{"OS:"}</span>
+                                <span class="sys-detail-label">{format!("{}:", crate::i18n::lookup(crate::i18n::PulseKey::Os, self.language).to_uppercase())}</span>
                                 <span class="sys-detail-val">{
                                     if self.os_override.is_some() {
                                         os_name.to_uppercase()
@@ -61,11 +61,11 @@ impl App {
                                 }</span>
                             </div>
                             <div class="sys-detail-row">
-                                <span class="sys-detail-label">{"KERNEL:"}</span>
+                                <span class="sys-detail-label">{format!("{}:", crate::i18n::lookup(crate::i18n::PulseKey::Kernel, self.language).to_uppercase())}</span>
                                 <span class="sys-detail-val">{ &stats.kernel_version }</span>
                             </div>
                             <div class="sys-detail-row">
-                                <span class="sys-detail-label">{"UPTIME:"}</span>
+                                <span class="sys-detail-label">{format!("{}:", crate::i18n::lookup(crate::i18n::PulseKey::Uptime, self.language).to_uppercase())}</span>
                                 <span class="sys-detail-val">{ uptime_str }</span>
                             </div>
                         </div>
@@ -79,7 +79,7 @@ impl App {
             html! {
                 <div class="hud-metric-card sys-info-card">
                     <div class="sys-info-left">
-                        <h3>{"SYSTEM INFO"}</h3>
+                        <h3>{crate::i18n::lookup(crate::i18n::PulseKey::SystemInfo, self.language)}</h3>
                         <div class="card-metric-block">
                             <div class="card-loading">{"Connecting..."}</div>
                         </div>

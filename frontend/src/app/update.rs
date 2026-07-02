@@ -110,7 +110,10 @@ impl App {
             }
             Msg::UpdateStats(stats) => self.handle_update_stats(stats),
             Msg::WsError(_err) => {
-                self.active_notification = Some(("Disconnected".to_string(), "error".to_string()));
+                self.active_notification = Some((
+                    crate::i18n::lookup(crate::i18n::PulseKey::Disconnected, self.language),
+                    "error".to_string()
+                ));
                 self.ws = None;
                 let link = ctx.link().clone();
                 Timeout::new(5000, move || {
@@ -120,7 +123,12 @@ impl App {
                 true
             }
             Msg::WsLog(msg) => {
-                self.active_notification = Some((msg.clone(), "info".to_string()));
+                let display_msg = if msg.contains("Connection established") {
+                    crate::i18n::lookup(crate::i18n::PulseKey::ConnectionEstablished, self.language)
+                } else {
+                    msg.clone()
+                };
+                self.active_notification = Some((display_msg, "info".to_string()));
                 let link = ctx.link().clone();
                 Timeout::new(3000, move || {
                     link.send_message(Msg::ClearNotification(msg));

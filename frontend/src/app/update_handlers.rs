@@ -77,22 +77,22 @@ impl App {
         let mut warning = None;
         if stats.cpu_global > 95.0 {
             warning = Some((
-                format!("CPU Load High: {:.0}%", stats.cpu_global),
+                crate::i18n::lookup(crate::i18n::PulseKey::CpuLoadHigh(stats.cpu_global), self.language),
                 "warning".to_string(),
             ));
         } else if stats.cpu_temp.unwrap_or(0.0) > 80.0 {
             warning = Some((
-                format!("CPU Temp High: {:.0}°C", stats.cpu_temp.unwrap()),
+                crate::i18n::lookup(crate::i18n::PulseKey::CpuTempHigh(stats.cpu_temp.unwrap()), self.language),
                 "warning".to_string(),
             ));
         } else if ram_percent > 90.0 {
             warning = Some((
-                format!("RAM Space Low: {:.0}%", ram_percent),
+                crate::i18n::lookup(crate::i18n::PulseKey::RamSpaceLow(ram_percent), self.language),
                 "warning".to_string(),
             ));
         } else if disk_percent > 90.0 {
             warning = Some((
-                format!("Disk Space Low: {:.0}%", disk_percent),
+                crate::i18n::lookup(crate::i18n::PulseKey::DiskSpaceLow(disk_percent), self.language),
                 "warning".to_string(),
             ));
         } else {
@@ -100,7 +100,7 @@ impl App {
             for (idx, gpu) in stats.gpus.iter().enumerate() {
                 if gpu.usage > 95.0 {
                     gpu_warning = Some((
-                        format!("GPU {} Load High: {:.0}%", idx + 1, gpu.usage),
+                        crate::i18n::lookup(crate::i18n::PulseKey::GpuLoadHigh(idx + 1, gpu.usage), self.language),
                         "warning".to_string(),
                     ));
                     break;
@@ -108,7 +108,7 @@ impl App {
                 if let Some(temp) = gpu.temp {
                     if temp > 85.0 {
                         gpu_warning = Some((
-                            format!("GPU {} Temp High: {:.0}°C", idx + 1, temp),
+                            crate::i18n::lookup(crate::i18n::PulseKey::GpuTempHigh(idx + 1, temp), self.language),
                             "warning".to_string(),
                         ));
                         break;
@@ -120,14 +120,15 @@ impl App {
                 warning = Some(gw);
             } else if net_total > 52_428_800.0 { // 50 MB/s
                 warning = Some((
-                    format!("High Network Traffic: {}", self.format_bytes(stats.net_in + stats.net_out)),
+                    crate::i18n::lookup(crate::i18n::PulseKey::HighNetworkTraffic(self.format_bytes(stats.net_in + stats.net_out)), self.language),
                     "warning".to_string(),
                 ));
             } else if stats.uptime < 300 {
                 let minutes = stats.uptime / 60;
                 let secs = stats.uptime % 60;
+                let uptime_str = format!("{}m {}s", minutes, secs);
                 warning = Some((
-                    format!("System recently rebooted! Uptime: {}m {}s", minutes, secs),
+                    crate::i18n::lookup(crate::i18n::PulseKey::SystemRecentlyRebooted(uptime_str), self.language),
                     "info".to_string(),
                 ));
             }
