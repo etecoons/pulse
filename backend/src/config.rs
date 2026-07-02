@@ -99,8 +99,8 @@ impl AppConfig {
             .unwrap_or(true);
 
         let enable_print = std::env::var("ENABLE_PRINT")
-            .map(|v| v == "true" || v == "on")
-            .unwrap_or(false);
+            .map(|v| v != "false" && v != "off")
+            .unwrap_or(true);
 
         let show_version = std::env::var("SHOW_VERSION")
             .map(|v| v != "false" && v != "off")

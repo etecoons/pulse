@@ -6,7 +6,7 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
     flake-utils.url = "github:numtide/flake-utils";
     shared-assets = {
-      url = "github:UberMetroid/shared-assets?ref=v3.0.5";
+      url = "github:UberMetroid/shared-assets?ref=v3.0.13";
       flake = false;
     };
   };
@@ -34,9 +34,9 @@
           cargoLock = {
             lockFile = ./Cargo.lock;
             outputHashes = {
-              "shared-core-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
-              "shared-backend-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
-              "shared-frontend-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
+              "shared-core-3.0.13" = "sha256-BWRLRyE3vVyrxGzSZRfj4se2bE1cVtukZwj3o4n7cEc=";
+              "shared-backend-3.0.13" = "sha256-BWRLRyE3vVyrxGzSZRfj4se2bE1cVtukZwj3o4n7cEc=";
+              "shared-frontend-3.0.13" = "sha256-BWRLRyE3vVyrxGzSZRfj4se2bE1cVtukZwj3o4n7cEc=";
             };
           };
 
@@ -69,9 +69,9 @@
           cargoLock = {
             lockFile = ./Cargo.lock;
             outputHashes = {
-              "shared-core-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
-              "shared-backend-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
-              "shared-frontend-3.0.0" = "sha256-lW9fLKb4h+b/IM8GQxCWSrbI9PWCKMyXlaNMATXJtgo=";
+              "shared-core-3.0.13" = "sha256-BWRLRyE3vVyrxGzSZRfj4se2bE1cVtukZwj3o4n7cEc=";
+              "shared-backend-3.0.13" = "sha256-BWRLRyE3vVyrxGzSZRfj4se2bE1cVtukZwj3o4n7cEc=";
+              "shared-frontend-3.0.13" = "sha256-BWRLRyE3vVyrxGzSZRfj4se2bE1cVtukZwj3o4n7cEc=";
             };
           };
 
