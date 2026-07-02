@@ -1,34 +1,98 @@
-# <img src="frontend/Assets/favicon.svg" width="48" height="48" align="center" alt="Pulse Icon"> Pulse
+# Pulse - Self-Hosted System Monitor
 
-A minimalist, high-performance, self-hosted system monitor container. Pulse runs a lightweight background thread on the host (or container) that queries CPU, RAM, Network I/O, and GPU usage metrics, streaming them to a sci-fi heads-up display (HUD) and an interactive diagnostic terminal in real-time.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/UberMetroid/pulse/main/frontend/Assets/favicon.svg" alt="Pulse Logo" width="128" height="128">
+</p>
 
-## Features
+Pulse is a minimalist, high-performance, self-hosted system monitor. It runs a lightweight background thread on the host (or container) that queries CPU, RAM, Network I/O, and GPU usage metrics, streaming them to a sci-fi heads-up display (HUD) and an interactive diagnostic terminal in real-time. Built with a high-performance Rust (Axum/Tokio) backend and a WebAssembly (Yew) frontend.
 
-*   **Samus-Visor HUD Mode**: Immersive, radial circular progress gauges representing CPU, memory, and GPU usage with high-tech glow and warning alarms.
-*   **Aura Terminal Mode**: Monospace sci-fi terminal log view that streams details and handles interactive debug commands.
+---
+
+## Key Features
+
+*   **Samus-Visor HUD**: Immersive, radial circular progress gauges representing CPU, memory, and GPU usage with high-tech glow and warning alarms.
+*   **Aura Terminal**: Monospace sci-fi terminal log view that streams details and handles interactive debug commands.
 *   **Auto-Adapting GPU Passthrough**: Dynamically scans for NVIDIA (`nvidia-smi`) and AMD/Intel (`sysfs`) graphics cards and adapts widgets automatically.
-*   **Security Primitives**: Features cookie-based PIN authentication, origin validation, CORS settings, HSTS, and X-Frame security headers.
-*   **Zero JS Bloat**: Written in 100% Rust (Axum backend) and compiled to WebAssembly (Yew 0.23 frontend).
-*   **Reproducible Nix Container**: Bundled as a secure, minimal Nix container running under `nobody:users`.
+*   **Access PIN Security**: Lock down the interface with an optional numerical PIN for absolute privacy.
+*   **Performance First**: Tiny resource footprint, zero external JS engine dependencies, and rapid page load speeds.
 
-## Environment Variables
+---
+
+## Container Registry
+
+The Docker image is built with **Nix** (no Alpine, fully reproducible) and published to Docker Hub:
+
+*   **Docker Hub**: [ubermetroid/pulse](https://hub.docker.com/r/ubermetroid/pulse)
+
+---
+
+## Container Installation
+
+1. Create a `docker-compose.yml` file:
+
+```yaml
+version: '3'
+services:
+  pulse:
+    image: ubermetroid/pulse:latest
+    container_name: pulse
+    restart: unless-stopped
+    ports:
+      - 4406:4406
+    environment:
+      - PORT=4406
+      - SITE_TITLE=Pulse
+      - BASE_URL=http://localhost:4406
+      - ALLOWED_ORIGINS=*
+      - PULSE_PIN=1234
+      - PULSE_REFRESH_INTERVAL=2
+      - TRUST_PROXY=false
+      - TZ=UTC
+      - ENABLE_TRANSLATION=false
+      - ENABLE_THEMES=true
+      - ENABLE_PRINT=false
+```
+
+2. Run the container:
+
+```bash
+docker compose up -d
+```
+
+3. Open your browser and navigate to `http://localhost:4406`.
+
+### Building the Image Locally
+
+To build the Docker container locally from the source files using Nix:
+
+```bash
+nix build .#dockerImage
+docker load < result
+docker tag pulse-nix:latest ubermetroid/pulse:latest
+```
+
+The image is Nix-built (no Alpine, no Docker daemon dependency for the build).
+For development iteration, use the devShell:
+
+```bash
+nix develop
+```
+
+## Configuration Options
+
+Configure these settings inside your Docker Compose environment or container environment variables:
 
 | Variable | Description | Default |
 | :--- | :--- | :--- |
-| `PORT` | Listening Port | `4406` |
-| `PULSE_SITE_TITLE` | Site Title displayed in the Header | `Pulse` |
-| `PULSE_PIN` | Lock GUI with numeric PIN authentication | None |
-| `PULSE_REFRESH_INTERVAL` | Metrics collection cycle (in seconds) | `2` |
-| `TRUST_PROXY` | Set true if running behind a reverse proxy | `false` |
-
-## Local Development
-
-Start the development server:
-
-```bash
-# Start backend
-cd backend && cargo run
-
-# Start frontend (requires Trunk)
-cd frontend && trunk serve
-```
+| `PORT` | The port number the backend HTTP server will bind to inside the container. | `4406` |
+| `SITE_TITLE` | Custom website title rendered in navigation headers, browser tabs, and PWA manifest. *(Supports fallback `PULSE_SITE_TITLE`)* | `Pulse` |
+| `BASE_URL` | Application base URL. Essential when deploying behind reverse proxies to ensure redirect and websocket links are resolved correctly. | `http://localhost:4406` |
+| `ALLOWED_ORIGINS` | Comma-separated list of allowed HTTP request origins (CORS filter). Use `*` to allow all origins. | `*` |
+| `PULSE_PIN` | Optional 4–10 digit PIN (numerical only) to lock access to the interface. Leave empty for public mode. | None |
+| `TZ` | Timezone for the container processes and logs. | `UTC` |
+| `PULSE_REFRESH_INTERVAL` | Metrics collection and broadcast cycle (in seconds). | `2` |
+| `ENABLE_TRANSLATION` | Enable the multi-language / translation selector in the navigation header (true/false). | `false` |
+| `ENABLE_THEMES` | Enable the Super Metroid theme selector in the navigation header (true/false). | `true` |
+| `ENABLE_PRINT` | Enable the print button in the navigation header (true/false). | `false` |
+| `MAX_ATTEMPTS` | Number of failed PIN attempts permitted before locking out the user client IP address. | `5` |
+| `TRUST_PROXY` | Set `true` if backend is hosted behind a reverse proxy (e.g. Nginx). | `false` |
