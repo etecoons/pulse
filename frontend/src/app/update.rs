@@ -28,6 +28,7 @@ impl App {
                 self.monitor_storage = json["monitorStorage"].as_bool().unwrap_or(true);
                 self.monitor_network = json["monitorNetwork"].as_bool().unwrap_or(true);
                 self.monitor_gpu = json["monitorGpu"].as_bool().unwrap_or(true);
+                self.enable_coffee = json["enableCoffee"].as_bool().unwrap_or(true);
 
                 if !self.pin_required {
                     self.is_authenticated = true;
@@ -118,7 +119,15 @@ impl App {
                 .forget();
                 true
             }
-            Msg::WsLog(_msg) => true,
+            Msg::WsLog(msg) => {
+                self.active_notification = Some((msg.clone(), "info".to_string()));
+                let link = ctx.link().clone();
+                Timeout::new(3000, move || {
+                    link.send_message(Msg::ClearNotification(msg));
+                })
+                .forget();
+                true
+            }
             Msg::Reconnect => {
                 if self.is_authenticated {
                     self.connect_ws(ctx);

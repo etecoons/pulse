@@ -80,6 +80,11 @@ impl App {
                 format!("CPU Load High: {:.0}%", stats.cpu_global),
                 "warning".to_string(),
             ));
+        } else if stats.cpu_temp.unwrap_or(0.0) > 80.0 {
+            warning = Some((
+                format!("CPU Temp High: {:.0}°C", stats.cpu_temp.unwrap()),
+                "warning".to_string(),
+            ));
         } else if ram_percent > 90.0 {
             warning = Some((
                 format!("RAM Space Low: {:.0}%", ram_percent),
@@ -91,9 +96,10 @@ impl App {
                 "warning".to_string(),
             ));
         } else {
+            let mut gpu_warning = None;
             for (idx, gpu) in stats.gpus.iter().enumerate() {
                 if gpu.usage > 95.0 {
-                    warning = Some((
+                    gpu_warning = Some((
                         format!("GPU {} Load High: {:.0}%", idx + 1, gpu.usage),
                         "warning".to_string(),
                     ));
@@ -101,13 +107,29 @@ impl App {
                 }
                 if let Some(temp) = gpu.temp {
                     if temp > 85.0 {
-                        warning = Some((
+                        gpu_warning = Some((
                             format!("GPU {} Temp High: {:.0}°C", idx + 1, temp),
                             "warning".to_string(),
                         ));
                         break;
                     }
                 }
+            }
+
+            if let Some(gw) = gpu_warning {
+                warning = Some(gw);
+            } else if net_total > 52_428_800.0 { // 50 MB/s
+                warning = Some((
+                    format!("High Network Traffic: {}", self.format_bytes(stats.net_in + stats.net_out)),
+                    "warning".to_string(),
+                ));
+            } else if stats.uptime < 300 {
+                let minutes = stats.uptime / 60;
+                let secs = stats.uptime % 60;
+                warning = Some((
+                    format!("System recently rebooted! Uptime: {}m {}s", minutes, secs),
+                    "info".to_string(),
+                ));
             }
         }
 
@@ -116,7 +138,7 @@ impl App {
         } else if self
             .active_notification
             .as_ref()
-            .map(|(_, cls)| cls == "warning" || cls == "success")
+            .map(|(_, cls)| cls == "warning" || cls == "success" || cls == "error" || cls == "info")
             .unwrap_or(true)
         {
             self.active_notification = None;

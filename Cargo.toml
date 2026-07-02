@@ -5,6 +5,10 @@ members = [
     "frontend"
 ]
 
+[workspace.package]
+name = "pulse"
+version = "1.3.23"
+
 [workspace.lints.rust]
 unsafe_code = "deny"
 missing_debug_implementations = "warn"
@@ -24,5 +28,15 @@ codegen-units = 1      # Reduce parallel codegen for better optimizations
 panic = "abort"        # Disable unwinding for smaller binary sizes
 strip = true           # Strip all symbols and debug info
 
-[profile.release.package.frontend]
+[profile.release.package.pulse-frontend]
 opt-level = "z"        # Specifically optimize the frontend WASM for size
+
+[patch."https://github.com/UberMetroid/shared-assets"]
+shared-core = { path = "../shared-assets/shared-rust/shared-core" }
+shared-backend = { path = "../shared-assets/shared-rust/shared-backend" }
+shared-frontend = { path = "../shared-assets/shared-rust/shared-frontend" }
+
+[patch."https://github.com/UberMetroid/shared-assets.git"]
+shared-core = { path = "../shared-assets/shared-rust/shared-core" }
+shared-backend = { path = "../shared-assets/shared-rust/shared-backend" }
+shared-frontend = { path = "../shared-assets/shared-rust/shared-frontend" }

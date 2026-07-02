@@ -23,6 +23,7 @@ pub struct SystemStats {
     pub os_name: String,
     pub os_version: String,
     pub kernel_version: String,
+    pub cpu_temp: Option<f32>,
 }
 
 pub struct SystemMonitor {
@@ -56,12 +57,12 @@ impl SystemMonitor {
                     .ok()
                     .map(|s| s.trim().to_string())
             })
-            .or_else(|| System::host_name())
+            .or_else(System::host_name)
             .unwrap_or_else(|| "localhost".to_string());
         let os_name = std::env::var("PULSE_OS")
             .ok()
             .filter(|s| !s.is_empty())
-            .or_else(|| System::name())
+            .or_else(System::name)
             .unwrap_or_else(|| "Linux".to_string());
         let os_version = System::os_version().unwrap_or_default();
         let kernel_version = System::kernel_version().unwrap_or_default();
@@ -139,6 +140,17 @@ impl SystemMonitor {
             // System Uptime (associated function in sysinfo)
             let uptime = System::uptime();
 
+            // Fetch CPU temperature
+            let components = sysinfo::Components::new_with_refreshed_list();
+            let cpu_temp = components
+                .iter()
+                .filter(|c| {
+                    let label = c.label().to_lowercase();
+                    label.contains("cpu") || label.contains("core") || label.contains("package") || label.contains("temp")
+                })
+                .map(|c| c.temperature())
+                .max_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+
             let stats = SystemStats {
                 cpu_global,
                 cpu_cores,
@@ -155,6 +167,7 @@ impl SystemMonitor {
                 os_name,
                 os_version,
                 kernel_version,
+                cpu_temp,
             };
 
             // Update shared state

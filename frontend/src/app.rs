@@ -61,6 +61,7 @@ pub struct App {
     pub monitor_network: bool,
     pub monitor_gpu: bool,
     pub os_override: Option<usize>,
+    pub enable_coffee: bool,
 }
 
 impl Component for App {
@@ -122,6 +123,7 @@ impl Component for App {
             monitor_network: true,
             monitor_gpu: true,
             os_override: None,
+            enable_coffee: true,
         }
     }
 
@@ -180,6 +182,9 @@ impl Component for App {
                     enable_print={self.enable_print}
                     print_disabled={true}
                     on_print={None::<Callback<MouseEvent>>}
+                    site_url={Some("https://github.com/UberMetroid/pulse".to_string())}
+                    version={Some(env!("CARGO_PKG_VERSION").to_string())}
+                    version_url={Some(format!("https://github.com/UberMetroid/pulse/releases/tag/v{}", env!("CARGO_PKG_VERSION")))}
                 />
 
 
@@ -193,10 +198,12 @@ impl Component for App {
                 </div>
 
                 <Footer
-                    show_version={true}
+                    show_version={false}
                     version={env!("CARGO_PKG_VERSION").to_string()}
+                    version_url={Some(format!("https://github.com/UberMetroid/pulse/releases/tag/v{}", env!("CARGO_PKG_VERSION")))}
                     show_github={true}
-                    github_url={Some("https://github.com/UberMetroid/pulse".to_string())}
+                    github_url={Some("https://github.com/UberMetroid".to_string())}
+                    coffee_url={if self.enable_coffee { Some("https://buymeacoffee.com/ubermetroid".to_string()) } else { None }}
                 >
                     {
                         if let Some((msg, cls)) = &self.active_notification {

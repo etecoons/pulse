@@ -21,6 +21,7 @@ pub struct AppConfig {
     pub monitor_storage: bool,
     pub monitor_network: bool,
     pub monitor_gpu: bool,
+    pub enable_coffee: bool,
 }
 
 impl AppConfig {
@@ -134,6 +135,10 @@ impl AppConfig {
             .map(|v| v != "false" && v != "off")
             .unwrap_or(true);
 
+        let enable_coffee = std::env::var("PULSE_ENABLE_COFFEE")
+            .map(|v| v != "false" && v != "off")
+            .unwrap_or(true);
+
         Self {
             port,
             site_title,
@@ -156,6 +161,7 @@ impl AppConfig {
             monitor_storage,
             monitor_network,
             monitor_gpu,
+            enable_coffee,
         }
     }
 }

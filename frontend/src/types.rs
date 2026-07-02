@@ -26,4 +26,5 @@ pub struct SystemStats {
     pub os_name: String,
     pub os_version: String,
     pub kernel_version: String,
+    pub cpu_temp: Option<f32>,
 }
