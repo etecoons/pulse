@@ -166,6 +166,12 @@ impl Component for App {
         let on_language_change = ctx.link().callback(Msg::ChangeLanguage);
         let on_logout = ctx.link().callback(|_| Msg::Logout);
 
+        let on_print = Some(Callback::from(|_| {
+            if let Some(window) = web_sys::window() {
+                let _ = window.print();
+            }
+        }));
+
         html! {
             <>
                 <Header
@@ -180,8 +186,8 @@ impl Component for App {
                     enable_translation={self.enable_translation}
                     enable_themes={self.enable_themes}
                     enable_print={self.enable_print}
-                    print_disabled={true}
-                    on_print={None::<Callback<MouseEvent>>}
+                    print_disabled={false}
+                    on_print={on_print}
                     site_url={Some("https://github.com/UberMetroid/pulse".to_string())}
                     version={Some(env!("CARGO_PKG_VERSION").to_string())}
                     version_url={Some(format!("https://github.com/UberMetroid/pulse/releases/tag/v{}", env!("CARGO_PKG_VERSION")))}
