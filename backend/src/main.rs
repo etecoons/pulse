@@ -27,7 +27,9 @@ const RATE_LIMIT_WINDOW: Duration = Duration::from_secs(60);
 #[tokio::main]
 async fn main() {
     // 1. Logging setup
-    utils::logger::init_logging();
+    shared_backend::tracing_init::init_tracing(
+        shared_backend::tracing_init::default_log_dir().as_deref(),
+    );
 
     // 2. Load Configuration and Shared State
     let config = AppConfig::load();

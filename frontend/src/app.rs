@@ -3,9 +3,8 @@ use serde_json::Value;
 use web_sys::WebSocket;
 use yew::prelude::*;
 
-use crate::storage::StorageService;
 use crate::types::SystemStats;
-use shared_frontend::{Footer, Header, i18n::Language};
+use shared_frontend::{Footer, Header, i18n::Language, storage::StorageService};
 
 mod login;
 mod update;
@@ -70,8 +69,13 @@ impl Component for App {
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
-        let language = Language::from_code(&StorageService::get_item("language", "en"));
-        let theme = StorageService::get_item("theme", "crateria");
+        let language = crate::i18n::get_saved_language();
+        let theme = StorageService::new().get_item("theme");
+        let theme = if theme.is_empty() {
+            "crateria".to_string()
+        } else {
+            theme
+        };
 
         let link = ctx.link().clone();
         wasm_bindgen_futures::spawn_local(async move {

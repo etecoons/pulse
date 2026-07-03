@@ -1,4 +1,5 @@
 use shared_frontend::i18n::Language;
+use shared_frontend::locale::{detect_browser_locale, set_saved_locale};
 
 #[derive(Debug, Clone)]
 pub enum PulseKey {
@@ -259,4 +260,12 @@ pub fn lookup(key: PulseKey, lang: Language) -> String {
             _ => "Connection established. Dashboard online.".to_string(),
         },
     }
+}
+
+pub fn get_saved_language() -> Language {
+    Language::from_code(&detect_browser_locale())
+}
+
+pub fn save_language(lang: Language) {
+    set_saved_locale(lang.code());
 }

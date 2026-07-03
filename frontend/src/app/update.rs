@@ -3,10 +3,11 @@ use gloo_timers::callback::Timeout;
 use serde_json::Value;
 use yew::prelude::*;
 use shared_frontend::i18n::strings::{lookup, StringKey};
+use shared_frontend::storage::StorageService;
 
 use crate::app::App;
 use crate::app::Msg;
-use crate::storage::StorageService;
+use crate::i18n::save_language;
 use crate::types::SystemStats;
 
 #[derive(serde::Serialize)]
@@ -153,7 +154,7 @@ impl App {
                 let next = shared_frontend::theme::Theme::ALL
                     [(idx + 1) % shared_frontend::theme::Theme::ALL.len()];
                 self.theme = next.name().to_string();
-                StorageService::set_item("theme", &self.theme);
+                StorageService::new().set_item("theme", &self.theme);
 
                 if let Some(window) = web_sys::window() {
                     let doc = window.document().unwrap();
@@ -168,7 +169,7 @@ impl App {
             }
             Msg::ChangeLanguage(lang) => {
                 self.language = lang;
-                StorageService::set_item("language", lang.code());
+                save_language(lang);
                 true
             }
             Msg::ClearNotification(msg_to_clear) => {
