@@ -7,7 +7,7 @@ Pulse is a minimalist, high-performance, self-hosted system monitor. It runs a l
 ## 🏛️ Architecture & Stack
 *   **Frontend**: Yew (WASM)
 *   **Backend**: Axum (Rust) / Tokio (SSE Broadcaster)
-*   **Deployment**: Nix-built Container / Unraid native / Docker Compose
+*   **Deployment**: UBI container (Red Hat UBI9) on Docker Hub / Unraid / Podman / Docker Compose
 
 ---
 
@@ -21,6 +21,25 @@ Pulse is a minimalist, high-performance, self-hosted system monitor. It runs a l
 ---
 
 ## 💾 Deployment & Installation
+
+### Container images (Docker Hub)
+
+Images are **UBI9-minimal** based (Red Hat Universal Base Image). Tags:
+
+| Tag | Meaning |
+| :--- | :--- |
+| `latest` | Current recommended build |
+| `ubi` | Explicit UBI image (same lineage as `latest`) |
+| `1.3.34` | Immutable release pin |
+
+```bash
+# Pull examples
+podman pull docker.io/ubermetroid/pulse:latest
+podman pull docker.io/ubermetroid/pulse:ubi
+podman pull docker.io/ubermetroid/pulse:1.3.34
+```
+
+Hub: [https://hub.docker.com/r/ubermetroid/pulse](https://hub.docker.com/r/ubermetroid/pulse)
 
 ### Docker Compose
 Create a `docker-compose.yml` file with the following service definition:
@@ -50,6 +69,24 @@ services:
       ENABLE_THEMES: ${ENABLE_THEMES:-true}
       MAX_ATTEMPTS: ${MAX_ATTEMPTS:-5}
       PULSE_REFRESH_INTERVAL: ${PULSE_REFRESH_INTERVAL:-2}
+```
+
+### Build the UBI image locally
+
+Requires [Podman](https://podman.io/) (or Docker) and network access to pull base images and crates.
+
+```bash
+# From the repository root
+podman build --format docker -f Containerfile.ubi \
+  -t docker.io/ubermetroid/pulse:1.3.34 \
+  -t docker.io/ubermetroid/pulse:latest \
+  -t docker.io/ubermetroid/pulse:ubi \
+  .
+
+# Optional: push all three tags
+podman push docker.io/ubermetroid/pulse:1.3.34
+podman push docker.io/ubermetroid/pulse:latest
+podman push docker.io/ubermetroid/pulse:ubi
 ```
 
 ---

@@ -28,9 +28,6 @@ local_uploads/
 .DS_Store
 Thumbs.db
 
-# Nix build artifacts
-result
-result-*
 
 # Dynamic frontend assets
 frontend/Assets/shared-assets/
