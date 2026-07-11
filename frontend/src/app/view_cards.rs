@@ -3,7 +3,11 @@ use yew::prelude::*;
 
 impl App {
     pub fn view_cpu_card(&self) -> Html {
-        let cpu_brand = self.stats.as_ref().map(|s| s.cpu_brand.clone()).unwrap_or_default();
+        let cpu_brand = self
+            .stats
+            .as_ref()
+            .map(|s| s.cpu_brand.clone())
+            .unwrap_or_default();
         html! {
             <div class="hud-metric-card" title={cpu_brand.clone()}>
                 <h3 style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 100%;" title={cpu_brand.clone()}>

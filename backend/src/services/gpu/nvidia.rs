@@ -22,7 +22,9 @@ pub fn get_nvidia_stats() -> Option<Vec<GpuStats>> {
     });
 
     if !has_nvidia_smi && !Path::new("/dev/nvidiactl").exists() {
-        tracing::debug!("Nvidia GPU stats skipped: nvidia-smi not found and /dev/nvidiactl does not exist.");
+        tracing::debug!(
+            "Nvidia GPU stats skipped: nvidia-smi not found and /dev/nvidiactl does not exist."
+        );
         return None;
     }
 
@@ -86,9 +88,5 @@ pub fn get_nvidia_stats() -> Option<Vec<GpuStats>> {
             });
         }
     }
-    if gpus.is_empty() {
-        None
-    } else {
-        Some(gpus)
-    }
+    if gpus.is_empty() { None } else { Some(gpus) }
 }

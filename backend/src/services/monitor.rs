@@ -66,12 +66,10 @@ impl SystemMonitor {
                 std::fs::read_to_string("/etc/host_os-release")
                     .ok()
                     .and_then(|content| {
-                        content.lines()
+                        content
+                            .lines()
                             .find(|line| line.starts_with("PRETTY_NAME="))
-                            .or_else(|| {
-                                content.lines()
-                                    .find(|line| line.starts_with("NAME="))
-                            })
+                            .or_else(|| content.lines().find(|line| line.starts_with("NAME=")))
                             .map(|line| {
                                 line.split('=')
                                     .nth(1)
@@ -91,12 +89,10 @@ impl SystemMonitor {
                 std::fs::read_to_string("/etc/host_os-release")
                     .ok()
                     .and_then(|content| {
-                        content.lines()
+                        content
+                            .lines()
                             .find(|line| line.starts_with("VERSION_ID="))
-                            .or_else(|| {
-                                content.lines()
-                                    .find(|line| line.starts_with("VERSION="))
-                            })
+                            .or_else(|| content.lines().find(|line| line.starts_with("VERSION=")))
                             .map(|line| {
                                 line.split('=')
                                     .nth(1)
@@ -190,7 +186,10 @@ impl SystemMonitor {
                 .iter()
                 .filter(|c| {
                     let label = c.label().to_lowercase();
-                    label.contains("cpu") || label.contains("core") || label.contains("package") || label.contains("temp")
+                    label.contains("cpu")
+                        || label.contains("core")
+                        || label.contains("package")
+                        || label.contains("temp")
                 })
                 .map(|c| c.temperature())
                 .max_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));

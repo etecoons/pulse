@@ -230,7 +230,9 @@ pub fn lookup(key: PulseKey, lang: Language) -> String {
             _ => format!("High Network Traffic: {}", speed),
         },
         PulseKey::SystemRecentlyRebooted(uptime) => match lang {
-            Language::Spanish => format!("¡Sistema reiniciado recientemente! Actividad: {}", uptime),
+            Language::Spanish => {
+                format!("¡Sistema reiniciado recientemente! Actividad: {}", uptime)
+            }
             Language::French => format!("Système récemment redémarré! Activité: {}", uptime),
             Language::German => format!("System kürzlich neu gestartet! Betriebszeit: {}", uptime),
             Language::Chinese => format!("系统刚刚重启！运行时间: {}", uptime),

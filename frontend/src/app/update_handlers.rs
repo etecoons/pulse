@@ -1,6 +1,6 @@
 use gloo_timers::callback::Timeout;
+use shared_frontend::i18n::strings::{StringKey, lookup};
 use yew::prelude::*;
-use shared_frontend::i18n::strings::{lookup, StringKey};
 
 use crate::app::App;
 use crate::app::Msg;
@@ -14,7 +14,7 @@ impl App {
         error: Option<String>,
         attempts_left: Option<usize>,
         lockout_minutes: Option<u64>,
-     ) -> bool {
+    ) -> bool {
         self.is_authenticated = success;
         self.pin_input.clear();
         if success {
@@ -22,15 +22,27 @@ impl App {
             self.attempts_left = None;
             self.lockout_minutes = None;
             self.connect_ws(ctx);
-            self.show_notification(ctx, lookup(StringKey::StatusPinSuccess, self.language).to_string(), "success".to_string());
+            self.show_notification(
+                ctx,
+                lookup(StringKey::StatusPinSuccess, self.language).to_string(),
+                "success".to_string(),
+            );
         } else {
             self.error_message = error.clone();
             self.attempts_left = attempts_left;
             self.lockout_minutes = lockout_minutes;
             if error.is_some() || attempts_left.is_some() || lockout_minutes.is_some() {
-                self.show_notification(ctx, lookup(StringKey::StatusPinFailure, self.language).to_string(), "error".to_string());
+                self.show_notification(
+                    ctx,
+                    lookup(StringKey::StatusPinFailure, self.language).to_string(),
+                    "error".to_string(),
+                );
             } else {
-                self.show_notification(ctx, lookup(StringKey::StatusLogout, self.language).to_string(), "success".to_string());
+                self.show_notification(
+                    ctx,
+                    lookup(StringKey::StatusLogout, self.language).to_string(),
+                    "success".to_string(),
+                );
             }
         }
         true
@@ -84,22 +96,34 @@ impl App {
         let mut warning = None;
         if stats.cpu_global > 95.0 {
             warning = Some((
-                crate::i18n::lookup(crate::i18n::PulseKey::CpuLoadHigh(stats.cpu_global), self.language),
+                crate::i18n::lookup(
+                    crate::i18n::PulseKey::CpuLoadHigh(stats.cpu_global),
+                    self.language,
+                ),
                 "warning".to_string(),
             ));
         } else if stats.cpu_temp.unwrap_or(0.0) > 80.0 {
             warning = Some((
-                crate::i18n::lookup(crate::i18n::PulseKey::CpuTempHigh(stats.cpu_temp.unwrap()), self.language),
+                crate::i18n::lookup(
+                    crate::i18n::PulseKey::CpuTempHigh(stats.cpu_temp.unwrap()),
+                    self.language,
+                ),
                 "warning".to_string(),
             ));
         } else if ram_percent > 90.0 {
             warning = Some((
-                crate::i18n::lookup(crate::i18n::PulseKey::RamSpaceLow(ram_percent), self.language),
+                crate::i18n::lookup(
+                    crate::i18n::PulseKey::RamSpaceLow(ram_percent),
+                    self.language,
+                ),
                 "warning".to_string(),
             ));
         } else if disk_percent > 90.0 {
             warning = Some((
-                crate::i18n::lookup(crate::i18n::PulseKey::DiskSpaceLow(disk_percent), self.language),
+                crate::i18n::lookup(
+                    crate::i18n::PulseKey::DiskSpaceLow(disk_percent),
+                    self.language,
+                ),
                 "warning".to_string(),
             ));
         } else {
@@ -107,7 +131,10 @@ impl App {
             for (idx, gpu) in stats.gpus.iter().enumerate() {
                 if gpu.usage > 95.0 {
                     gpu_warning = Some((
-                        crate::i18n::lookup(crate::i18n::PulseKey::GpuLoadHigh(idx + 1, gpu.usage), self.language),
+                        crate::i18n::lookup(
+                            crate::i18n::PulseKey::GpuLoadHigh(idx + 1, gpu.usage),
+                            self.language,
+                        ),
                         "warning".to_string(),
                     ));
                     break;
@@ -115,7 +142,10 @@ impl App {
                 if let Some(temp) = gpu.temp {
                     if temp > 85.0 {
                         gpu_warning = Some((
-                            crate::i18n::lookup(crate::i18n::PulseKey::GpuTempHigh(idx + 1, temp), self.language),
+                            crate::i18n::lookup(
+                                crate::i18n::PulseKey::GpuTempHigh(idx + 1, temp),
+                                self.language,
+                            ),
                             "warning".to_string(),
                         ));
                         break;
@@ -125,9 +155,15 @@ impl App {
 
             if let Some(gw) = gpu_warning {
                 warning = Some(gw);
-            } else if net_total > 52_428_800.0 { // 50 MB/s
+            } else if net_total > 52_428_800.0 {
+                // 50 MB/s
                 warning = Some((
-                    crate::i18n::lookup(crate::i18n::PulseKey::HighNetworkTraffic(self.format_bytes(stats.net_in + stats.net_out)), self.language),
+                    crate::i18n::lookup(
+                        crate::i18n::PulseKey::HighNetworkTraffic(
+                            self.format_bytes(stats.net_in + stats.net_out),
+                        ),
+                        self.language,
+                    ),
                     "warning".to_string(),
                 ));
             } else if stats.uptime < 300 {
@@ -135,7 +171,10 @@ impl App {
                 let secs = stats.uptime % 60;
                 let uptime_str = format!("{}m {}s", minutes, secs);
                 warning = Some((
-                    crate::i18n::lookup(crate::i18n::PulseKey::SystemRecentlyRebooted(uptime_str), self.language),
+                    crate::i18n::lookup(
+                        crate::i18n::PulseKey::SystemRecentlyRebooted(uptime_str),
+                        self.language,
+                    ),
                     "info".to_string(),
                 ));
             }

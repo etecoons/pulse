@@ -1,9 +1,9 @@
 use gloo_net::http::Request;
 use gloo_timers::callback::Timeout;
 use serde_json::Value;
-use yew::prelude::*;
-use shared_frontend::i18n::strings::{lookup, StringKey};
+use shared_frontend::i18n::strings::{StringKey, lookup};
 use shared_frontend::storage::StorageService;
+use yew::prelude::*;
 
 use crate::app::App;
 use crate::app::Msg;
@@ -114,7 +114,7 @@ impl App {
             Msg::WsError(_err) => {
                 self.active_notification = Some((
                     lookup(StringKey::StatusOffline, self.language).to_string(),
-                    "error".to_string()
+                    "error".to_string(),
                 ));
                 self.ws = None;
                 let link = ctx.link().clone();
@@ -126,7 +126,10 @@ impl App {
             }
             Msg::WsLog(msg) => {
                 let (display_msg, cls) = if msg.contains("Connection established") {
-                    (lookup(StringKey::StatusOnline, self.language).to_string(), "success")
+                    (
+                        lookup(StringKey::StatusOnline, self.language).to_string(),
+                        "success",
+                    )
                 } else {
                     (msg.clone(), "info")
                 };
@@ -164,7 +167,11 @@ impl App {
                         .set_attribute("data-theme", &self.theme)
                         .unwrap();
                 }
-                self.show_notification(ctx, lookup(StringKey::StatusThemeChanged, self.language).to_string(), "success".to_string());
+                self.show_notification(
+                    ctx,
+                    lookup(StringKey::StatusThemeChanged, self.language).to_string(),
+                    "success".to_string(),
+                );
                 true
             }
             Msg::ChangeLanguage(lang) => {
@@ -236,9 +243,17 @@ impl App {
                 if let Some(window) = web_sys::window() {
                     let print_res = window.print();
                     if print_res.is_ok() {
-                        self.show_notification(ctx, lookup(StringKey::StatusPrintSuccess, self.language).to_string(), "success".to_string());
+                        self.show_notification(
+                            ctx,
+                            lookup(StringKey::StatusPrintSuccess, self.language).to_string(),
+                            "success".to_string(),
+                        );
                     } else {
-                        self.show_notification(ctx, lookup(StringKey::StatusPrintFailure, self.language).to_string(), "error".to_string());
+                        self.show_notification(
+                            ctx,
+                            lookup(StringKey::StatusPrintFailure, self.language).to_string(),
+                            "error".to_string(),
+                        );
                     }
                 }
                 false

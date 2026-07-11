@@ -13,12 +13,14 @@ pub fn get_intel_stats() -> Option<Vec<GpuStats>> {
     if let Ok(entries) = fs::read_dir(drm_path) {
         for entry in entries.flatten() {
             let name = entry.file_name().to_string_lossy().to_string();
-            if name.starts_with("card") && !name.contains('-')
+            if name.starts_with("card")
+                && !name.contains('-')
                 && let Ok(vendor) = fs::read_to_string(entry.path().join("device/vendor"))
-                    && vendor.trim().contains("0x8086") {
-                        has_intel = true;
-                        break;
-                    }
+                && vendor.trim().contains("0x8086")
+            {
+                has_intel = true;
+                break;
+            }
         }
     }
 
@@ -72,15 +74,16 @@ pub fn get_intel_stats() -> Option<Vec<GpuStats>> {
         };
 
         if let Some(engines) = obj.get("engines")
-            && let Some(engines_obj) = engines.as_object() {
-                let mut max_busy = 0.0f32;
-                for (_engine_name, info) in engines_obj {
-                    if let Some(busy_val) = info.get("busy").and_then(|b| b.as_f64()) {
-                        max_busy = max_busy.max(busy_val as f32);
-                    }
+            && let Some(engines_obj) = engines.as_object()
+        {
+            let mut max_busy = 0.0f32;
+            for (_engine_name, info) in engines_obj {
+                if let Some(busy_val) = info.get("busy").and_then(|b| b.as_f64()) {
+                    max_busy = max_busy.max(busy_val as f32);
                 }
-                usage = max_busy;
             }
+            usage = max_busy;
+        }
     } else {
         let mut max_busy = 0.0f32;
         let mut search_str = &stdout[..];

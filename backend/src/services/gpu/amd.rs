@@ -59,9 +59,5 @@ pub fn get_amd_stats() -> Option<Vec<GpuStats>> {
             }
         }
     }
-    if gpus.is_empty() {
-        None
-    } else {
-        Some(gpus)
-    }
+    if gpus.is_empty() { None } else { Some(gpus) }
 }
