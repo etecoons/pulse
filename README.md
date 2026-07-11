@@ -1,4 +1,4 @@
-# Pulse — Self-Hosted System Monitor <img src="https://raw.githubusercontent.com/UberMetroid/unraid-templates/main/icons/pulse.png" width="48" height="48" alt="pulse logo" align="right">
+# Pulse — Self-Hosted System Monitor <img src="https://raw.githubusercontent.com/etecoons/unraid-apps/main/icons/pulse.png" width="48" height="48" alt="pulse logo" align="right">
 
 Pulse is a minimalist, high-performance, self-hosted system monitor. It runs a lightweight background thread on the host (or container) that queries CPU, RAM, Network I/O, and GPU usage metrics, streaming them to a sci-fi heads-up display (HUD) and an interactive diagnostic terminal in real-time. Built with a high-performance Rust (Axum/Tokio) backend and a WebAssembly (Yew) frontend.
 
