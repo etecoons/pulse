@@ -7,6 +7,7 @@ use crate::types::SystemStats;
 use shared_frontend::{Footer, Header, i18n::Language, storage::StorageService};
 
 mod login;
+mod os_override;
 mod update;
 mod update_handlers;
 mod view;
