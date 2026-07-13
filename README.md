@@ -6,7 +6,7 @@
 
 # Pulse
 
-[![CI](https://github.com/etecoons/pulse/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/etecoons/pulse/actions/workflows/build-and-deploy.yml)
+[![CI](https://github.com/etecoons/pulse/actions/workflows/ci.yml/badge.svg)](https://github.com/etecoons/pulse/actions/workflows/ci.yml)
 
 Real-time system monitoring panel built in Rust.
 
