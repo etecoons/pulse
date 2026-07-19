@@ -117,10 +117,7 @@ COPY --from=builder /src/frontend/dist /app/frontend/dist
 WORKDIR /app
 USER 99:100
 
-ENV PORT=4406 \
-    RUST_LOG=info \
-
-
+ENV PORT=4406
 EXPOSE 4406
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
