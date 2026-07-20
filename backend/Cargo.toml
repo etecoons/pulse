@@ -1,6 +1,6 @@
 [package]
 name = "backend"
-version = "1.0.16"
+version = "1.0.17"
 edition = "2024"
 authors = ["studio2201"]
 license = "Apache-2.0"
@@ -10,8 +10,8 @@ description = "Axum backend service for Pulse."
 readme = "../README.md"
 
 [dependencies]
-shared-core = { git = "https://github.com/UberMetroid/shared-assets.git", tag = "v3.0.29" }
-shared-backend = { git = "https://github.com/UberMetroid/shared-assets.git", tag = "v3.0.29" }
+shared-core = { git = "https://github.com/UberMetroid/shared-assets.git", tag = "v3.0.30" }
+shared-backend = { git = "https://github.com/UberMetroid/shared-assets.git", tag = "v3.0.30" }
 tokio = { version = "1.36", features = ["macros", "rt-multi-thread", "net", "time", "sync", "io-util"] }
 axum = { version = "0.8", features = ["ws"] }
 tower-http = { version = "0.7", features = ["fs", "cors", "trace"] }
