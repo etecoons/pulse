@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.18] - 2026-07-19
 
 ### Changed
+- **Container Cleanup**: Renamed misleading `Containerfile.ubi` to standard `Containerfile` (the build target remains optimized Alpine Linux).
+
+## [1.0.18] - 2026-07-19
+
+### Changed
 - **RFC Compliance**: Updated `shared-assets` to `v3.0.32` to inherit standard RFC 7235 compliance (`WWW-Authenticate` headers for unauthorized responses).
 
 ## [1.0.17] - 2026-07-19
