@@ -19,7 +19,7 @@ pub async fn verify_pin(
     State(state): State<AppState>,
     Json(payload): Json<VerifyPinPayload>,
 ) -> impl IntoResponse {
-    let pin_req = &state.config.pin;
+    let pin_req = &state.config.server.pin;
     if pin_req.is_none() {
         return (StatusCode::OK, Json(serde_json::json!({ "success": true }))).into_response();
     }
@@ -29,13 +29,13 @@ pub async fn verify_pin(
     let ip = get_client_ip(
         &headers,
         addr,
-        state.config.trust_proxy,
-        &state.config.trusted_proxies,
+        state.config.server.trust_proxy,
+        &state.config.server.trusted_proxies,
     );
     let ip_str = ip.to_string();
-    let lockout_dur = Duration::from_secs(state.config.lockout_time_minutes * 60);
+    let lockout_dur = Duration::from_secs(state.config.server.lockout_time_minutes * 60);
 
-    if attempts::is_locked_out(&ip_str, state.config.max_attempts as u32, lockout_dur) {
+    if attempts::is_locked_out(&ip_str, state.config.server.max_attempts, lockout_dur) {
         let remaining = attempts::lockout_remaining_secs(&ip_str, lockout_dur);
         let time_left_min = (remaining as f64 / 60.0).ceil() as u64;
         return (
@@ -76,13 +76,13 @@ pub async fn verify_pin(
 
         let secure = shared_backend::cookie_auth::cookie_should_be_secure(
             &headers,
-            &state.config.base_url,
+            &state.config.server.base_url,
         );
 
         let cookie = shared_backend::cookie_auth::build_cookie(
             COOKIE_NAME,
             &session_id,
-            state.config.cookie_max_age_hours,
+            state.config.server.cookie_max_age_hours,
             secure,
         );
         let cookie_str = cookie.to_string();
@@ -100,14 +100,15 @@ pub async fn verify_pin(
         let attempt = attempts::record_attempt(&ip_str);
         let remaining = state
             .config
+            .server
             .max_attempts
-            .saturating_sub(attempt.count as usize);
+            .saturating_sub(attempt.count);
         tracing::warn!(
             target: "auth",
             "failed PIN attempt #{count} from {ip_str}",
             count = attempt.count
         );
-        if attempt.count as usize >= state.config.max_attempts {
+        if attempt.count >= state.config.server.max_attempts {
             tracing::warn!(target: "auth", "IP {ip_str} locked out");
         }
 

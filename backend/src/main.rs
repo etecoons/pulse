@@ -39,7 +39,7 @@ async fn main() {
     // Start system metrics loop
     monitor::start_monitor(state.clone());
 
-    utils::pwa::generate_pwa_manifest(&config.site_title);
+    utils::pwa::generate_pwa_manifest(&config.server.site_title);
 
     // Background cleanup task for per-IP rate-limiting
     let state_clone = state.clone();
@@ -97,19 +97,19 @@ async fn main() {
         .layer(cors)
         .with_state(state);
 
-    let listener = match tokio::net::TcpListener::bind(format!("[::]:{}", config.port)).await {
+    let listener = match tokio::net::TcpListener::bind(format!("[::]:{}", config.server.port)).await {
         Ok(l) => {
-            tracing::info!("Starting dual-stack server on [::]:{}", config.port);
+            tracing::info!("Starting dual-stack server on [::]:{}", config.server.port);
             l
         }
         Err(e) => {
             tracing::warn!(
                 "Failed to bind IPv6 [::]:{} ({:?}). Falling back to IPv4 0.0.0.0:{}",
-                config.port,
+                config.server.port,
                 e,
-                config.port
+                config.server.port
             );
-            tokio::net::TcpListener::bind(format!("0.0.0.0:{}", config.port))
+            tokio::net::TcpListener::bind(format!("0.0.0.0:{}", config.server.port))
                 .await
                 .expect("failed to bind to IPv4")
         }
@@ -127,15 +127,15 @@ async fn serve_config(
     axum::extract::State(state): axum::extract::State<AppState>,
 ) -> impl axum::response::IntoResponse {
     axum::Json(serde_json::json!({
-        "siteTitle": state.config.site_title,
-        "pinRequired": state.config.pin.is_some(),
-        "pinLength": state.config.pin.as_ref().map_or(0, |p| p.len()),
-        "enableTranslation": state.config.enable_translation,
-        "enable_translation": state.config.enable_translation,
-        "enableThemes": state.config.enable_themes,
-        "enable_themes": state.config.enable_themes,
-        "enablePrint": state.config.enable_print,
-        "enable_print": state.config.enable_print,
+        "siteTitle": state.config.server.site_title,
+        "pinRequired": state.config.server.pin.is_some(),
+        "pinLength": state.config.server.pin.as_ref().map_or(0, |p| p.len()),
+        "enableTranslation": state.config.server.enable_translation,
+        "enable_translation": state.config.server.enable_translation,
+        "enableThemes": state.config.server.enable_themes,
+        "enable_themes": state.config.server.enable_themes,
+        "enablePrint": state.config.server.enable_print,
+        "enable_print": state.config.server.enable_print,
         "monitorCpu": state.config.monitor_cpu,
         "monitorMemory": state.config.monitor_memory,
         "monitorStorage": state.config.monitor_storage,

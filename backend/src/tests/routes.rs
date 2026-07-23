@@ -13,33 +13,22 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 
 fn test_state(pin: Option<String>) -> AppState {
-    AppState::new(
-        AppConfig {
-            port: 4406,
-            site_title: "TestPulse".to_string(),
-            pin,
-            max_attempts: 5,
-            lockout_time_minutes: 15,
-            cookie_max_age_hours: 24,
-            trust_proxy: false,
-            trusted_proxies: vec![],
-            allowed_origins: "*".to_string(),
-            base_url: "/".to_string(),
-            enable_translation: false,
-            enable_themes: true,
-            enable_print: false,
-            show_version: true,
-            show_github: true,
-            refresh_interval: 2,
-            monitor_cpu: true,
-            monitor_memory: true,
-            monitor_storage: true,
-            monitor_network: true,
-            monitor_gpu: true,
-            enable_coffee: true,
-        },
-        Arc::new(RwLock::new(None)),
-    )
+    use shared_backend::server::ServerConfig;
+    let mut server = ServerConfig::from_env("TEST");
+    server.pin = pin;
+    server.port = 4406;
+    server.site_title = "TestPulse".to_string();
+    let config = AppConfig {
+        server: Arc::new(server),
+        refresh_interval: 2,
+        monitor_cpu: true,
+        monitor_memory: true,
+        monitor_storage: true,
+        monitor_network: true,
+        monitor_gpu: true,
+        enable_coffee: true,
+    };
+    AppState::new(config, Arc::new(RwLock::new(None)))
 }
 
 #[test]
