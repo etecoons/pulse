@@ -1,6 +1,6 @@
 use crate::config::AppConfig;
 use crate::routes::auth::pin_required;
-use crate::routes::auth::verify_pin::{generate_session_id, verify_pin};
+use crate::routes::auth::verify_pin::verify_pin;
 use crate::state::AppState;
 use axum::{
     Json,
@@ -44,7 +44,7 @@ fn test_state(pin: Option<String>) -> AppState {
 
 #[test]
 fn session_id_format() {
-    let id = generate_session_id();
+    let id = shared_backend::session_id::generate_session_id();
     assert_eq!(id.len(), 32);
     assert!(id.chars().all(|c| c.is_ascii_hexdigit()));
 }
