@@ -93,12 +93,8 @@ Distributed under the Apache 2.0 License. See [LICENSE](LICENSE) for details.
 
 ---
 
-### Project Banner Showcase
-
-Official **Pulse** project banner reflecting real-time system monitoring telemetry graphs and metrics visual architecture.
-
 <p align="center">
   <a href="https://github.com/studio2201/pulse">
-    <img src="assets/pulse-header.jpg" alt="studio2201 banner" width="100%">
+    <img src="assets/corgi-footer.jpg" alt="studio2201 banner" width="100%">
   </a>
 </p>
