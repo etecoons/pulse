@@ -1,5 +1,3 @@
-mod cookie_auth;
-mod session_id;
 use axum::{Router, middleware, routing::get};
 use shared_backend::middleware::{
     HstsState, TitleState, cors_layer, hsts_layer, security_headers_layer, title_injection_layer,
@@ -153,6 +151,9 @@ async fn health_check() -> impl axum::response::IntoResponse {
 
 async fn graceful_shutdown() {
     use tokio::signal::unix::{SignalKind, signal};
+
+mod cookie_auth;
+mod session_id;
 
     let mut sigint = signal(SignalKind::interrupt()).expect("install SIGINT handler");
     let mut sigterm = signal(SignalKind::terminate()).expect("install SIGTERM handler");
