@@ -158,11 +158,11 @@ impl Component for App {
             )
                 as Box<dyn FnMut(web_sys::KeyboardEvent)>);
 
-            let window = web_sys::window().expect("no global `window` exists");
-            window
-                .add_event_listener_with_callback("keydown", closure.as_ref().unchecked_ref())
-                .unwrap();
-            closure.forget();
+            if let Some(window) = web_sys::window() {
+                let _ = window
+                    .add_event_listener_with_callback("keydown", closure.as_ref().unchecked_ref());
+                closure.forget();
+            }
         }
     }
 

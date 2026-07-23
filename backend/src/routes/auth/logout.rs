@@ -28,10 +28,9 @@ pub async fn logout(headers: HeaderMap, State(state): State<AppState>) -> impl I
         COOKIE_NAME
     );
     let mut headers = HeaderMap::new();
-    headers.insert(
-        header::SET_COOKIE,
-        header::HeaderValue::from_str(&cookie_clear).unwrap(),
-    );
+    if let Ok(val) = header::HeaderValue::from_str(&cookie_clear) {
+        headers.insert(header::SET_COOKIE, val);
+    }
     (
         StatusCode::OK,
         headers,

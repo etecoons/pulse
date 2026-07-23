@@ -60,11 +60,8 @@ impl App {
                 let link = ctx.link().clone();
                 wasm_bindgen_futures::spawn_local(async move {
                     let payload = VerifyPinPayload { pin: Some(pin) };
-                    if let Ok(resp) = Request::post("/api/verify-pin")
-                        .json(&payload)
-                        .unwrap()
-                        .send()
-                        .await
+                    if let Ok(req) = Request::post("/api/verify-pin").json(&payload)
+                        && let Ok(resp) = req.send().await
                     {
                         if resp.status() == 200 {
                             link.send_message(Msg::PinResponse(true, None, None, None));
@@ -159,13 +156,12 @@ impl App {
                 self.theme = next.name().to_string();
                 StorageService::new().set_item("theme", &self.theme);
 
-                if let Some(window) = web_sys::window() {
-                    let doc = window.document().unwrap();
-                    doc.document_element().unwrap().set_class_name(&self.theme);
-                    doc.document_element()
-                        .unwrap()
-                        .set_attribute("data-theme", &self.theme)
-                        .unwrap();
+                if let Some(window) = web_sys::window()
+                    && let Some(doc) = window.document()
+                    && let Some(elem) = doc.document_element()
+                {
+                    elem.set_class_name(&self.theme);
+                    let _ = elem.set_attribute("data-theme", &self.theme);
                 }
                 self.show_notification(
                     ctx,

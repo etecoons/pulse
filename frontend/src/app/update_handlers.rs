@@ -102,12 +102,11 @@ impl App {
                 ),
                 "warning".to_string(),
             ));
-        } else if stats.cpu_temp.unwrap_or(0.0) > 80.0 {
+        } else if let Some(temp) = stats.cpu_temp
+            && temp > 80.0
+        {
             warning = Some((
-                crate::i18n::lookup(
-                    crate::i18n::PulseKey::CpuTempHigh(stats.cpu_temp.unwrap()),
-                    self.language,
-                ),
+                crate::i18n::lookup(crate::i18n::PulseKey::CpuTempHigh(temp), self.language),
                 "warning".to_string(),
             ));
         } else if ram_percent > 90.0 {

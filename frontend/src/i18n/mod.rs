@@ -1,7 +1,7 @@
 pub mod types;
-pub use types::*;
 use shared_frontend::i18n::Language;
 use shared_frontend::locale::{detect_browser_locale, set_saved_locale};
+pub use types::*;
 
 pub fn lookup(key: PulseKey, lang: Language) -> String {
     match key {

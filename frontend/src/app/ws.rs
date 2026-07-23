@@ -13,10 +13,13 @@ impl App {
             return;
         }
 
-        let window = web_sys::window().expect("no global window exists");
-        let location = window.location();
-        let host = location.host().expect("failed to get host");
-        let protocol = location.protocol().expect("failed to get protocol");
+        let (host, protocol) = match web_sys::window().map(|w| w.location()) {
+            Some(loc) => (
+                loc.host().unwrap_or_else(|_| "localhost".to_string()),
+                loc.protocol().unwrap_or_else(|_| "http:".to_string()),
+            ),
+            None => ("localhost".to_string(), "http:".to_string()),
+        };
 
         let ws_protocol = if protocol == "https:" { "wss:" } else { "ws:" };
         let ws_url = format!("{}//{}/api/stats/ws", ws_protocol, host);

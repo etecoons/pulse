@@ -68,7 +68,11 @@ async fn try_paths(c: &Client, paths: &[&str]) -> Option<reqwest::Response> {
 #[ignore]
 async fn health_returns_200() {
     let c = client();
-    let r = c.get(format!("{}/health", base_url())).send().await.unwrap();
+    let r = c
+        .get(format!("{}/health", base_url()))
+        .send()
+        .await
+        .unwrap();
     assert_eq!(r.status(), 200, "expected 200 from /health");
 }
 
@@ -83,7 +87,10 @@ async fn root_serves_html() {
         .get("content-type")
         .and_then(|v| v.to_str().ok())
         .unwrap_or("");
-    assert!(ct.starts_with("text/html"), "expected text/html, got {ct:?}");
+    assert!(
+        ct.starts_with("text/html"),
+        "expected text/html, got {ct:?}"
+    );
 }
 
 #[tokio::test]
@@ -112,7 +119,10 @@ async fn manifest_parses_as_pwa() {
         .await
         .unwrap_or_else(|| panic!("no manifest path returned 2xx: {MANIFEST_CANDIDATES:?}"));
     let v: Value = r.json().await.unwrap();
-    assert!(v["name"].is_string(), "manifest.name must be a string, got {v:?}");
+    assert!(
+        v["name"].is_string(),
+        "manifest.name must be a string, got {v:?}"
+    );
     assert!(v["icons"].is_array(), "manifest.icons must be an array");
 }
 
@@ -156,15 +166,16 @@ async fn stats_endpoint_returns_system_metrics() {
     // JSON (not Prometheus text format) with cpu_global, cpu_cores,
     // ram_used, etc.
     for path in ["/api/stats", "/api/metrics", "/metrics"] {
-        let r = c.get(format!("{}{}", base_url(), path)).send().await.unwrap();
+        let r = c
+            .get(format!("{}{}", base_url(), path))
+            .send()
+            .await
+            .unwrap();
         if !r.status().is_success() {
             continue;
         }
         let v: Value = r.json().await.unwrap();
-        assert!(
-            v.is_object(),
-            "{path} must return a JSON object, got {v:?}"
-        );
+        assert!(v.is_object(), "{path} must return a JSON object, got {v:?}");
         assert!(
             v["cpu_global"].is_number() || v["cpu"].is_number() || v["ram_used"].is_number(),
             "{path} must expose at least one numeric system metric, got {v:?}"
