@@ -54,7 +54,7 @@ async fn main() {
     });
 
     let server_config = Arc::new(ServerConfig::from_env("PULSE"));
-    let cors = cors_layer(&server_config);
+    let cors = cors_layer(&crate::middleware::CorsState(server_config.clone()));
 
     // 3. API Routes setup
     let api_routes = Router::new()
@@ -92,10 +92,10 @@ async fn main() {
         ))
         .layer(axum::middleware::from_fn(fix_content_length_middleware))
         .layer(middleware::from_fn_with_state(
-            HstsState(server_config.clone()),
+            crate::middleware::HstsState(server_config.clone()),
             hsts_layer,
         ))
-        .layer(middleware::from_fn(security_headers_layer))
+        .layer(middleware::from_fn_with_state(crate::middleware::SecurityHeadersState(server_config.clone()), crate::middleware::security_headers_layer))
         .layer(tower_http::trace::TraceLayer::new_for_http())
         .layer(cors)
         .with_state(state);

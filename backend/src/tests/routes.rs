@@ -15,7 +15,7 @@ use tokio::sync::RwLock;
 fn test_state(pin: Option<String>) -> AppState {
     use crate::config::AppConfig;
     let mut server = ServerConfig::from_env("TEST");
-    server.pin = pin;
+    cfg.pin = pin;
     server.port = 4406;
     server.site_title = "TestPulse".to_string();
     let config = AppConfig {
